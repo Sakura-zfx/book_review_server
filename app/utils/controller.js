@@ -1,8 +1,8 @@
 /*
- * @Author: sakura.zhang 
- * @Date: 2018-03-11 23:39:16 
+ * @Author: sakura.zhang
+ * @Date: 2018-03-11 23:39:16
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-04-02 01:39:47
+ * @Last Modified time: 2018-04-10 17:02:21
  */
 import Router from 'koa-router'
 import routesList from '../api/index'
@@ -34,7 +34,7 @@ const addRoutes = function () {
   }
 }
 
-export default () => { 
+export default () => {
   addRoutes()
   return router.routes()
 }
