@@ -2,7 +2,7 @@
  * @Author: sakura.zhang
  * @Date: 2018-03-19 19:42:12
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-04-16 01:15:26
+ * @Last Modified time: 2018-04-16 14:02:32
  */
 import Koa from 'koa'
 import session from 'koa-session'
@@ -48,13 +48,12 @@ app.use(logger())
 const secret = 'jwt_koa_secret' // 用于加密的key
 app.use(jwt({
   secret,
-})).unless({
+}).unless({
   path: [/\/api\/register/, /\/api\/login/],
-})
+}))
 
 // koa-jwt错误处理中间件
 app.use(errorHandle)
-router.use('/api', jwt({secret}, rouer.routes()))
 
 app.use(router.routes())
 app.use(router.allowedMethods())

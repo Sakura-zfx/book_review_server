@@ -17,7 +17,6 @@ class UserController {
   static async postLogin(ctx) {
     const loginMsg = ctx.request.body
     const loginAuth = await UserModel.getAuth(loginMsg)
-
     if (loginAuth) {
       if (bcrypt.compareSync(loginMsg.credential, loginAuth.credential)) {
         const user = await UserModel.findUserById(loginAuth.userId)
@@ -25,7 +24,7 @@ class UserController {
           userId: user.userId,
           userName: user.nickName
         }
-        const token = jwt.sign(userToken, 'secretOrPrivateKey', { expiresIn: '3h' })
+        const token = jwt.sign(userToken, 'jwt_koa_secret', { expiresIn: '3h' })
         
         ctx.body = {
           code: 200,
@@ -42,9 +41,11 @@ class UserController {
     }
   }
   /**
-   * 
+   * 登出
    */
-
+  static async getLogout(ctx) {
+    const userId = ctx.params.userId
+  }
   /**
    * 注册、创建用户
    */
@@ -62,7 +63,7 @@ class UserController {
         const hash = bcrypt.hashSync(user.credential, salt)
 
         user.credential = hash
-        user.nickName = user.nickName ? user.userName : `user_${user.identity}`
+        user.nickName = user.nickName ? user.nickName : `user_${user.identity}`
 
         await UserModel.createUser(user)
 
@@ -80,10 +81,10 @@ class UserController {
   }
 
   /**
-   * 注销、删除用户
+   * 删除用户
    */
   static async deleteUser(ctx) {
-    const userId = ctx.request.body
+    const userId = ctx.params.userId
     await UserModel.deleteUser(userId)
     ctx.body = {
       code: 200,
@@ -105,7 +106,7 @@ class UserController {
    * 查询用户信息
    */
   static async findUserById(ctx) {
-    const userId = ctx.request.body
+    const userId = ctx.params.userId
 
     const userInfo = await UserModel.findUserById(userId)
 

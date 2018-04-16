@@ -17,7 +17,7 @@ class UserModel {
     } = {
       ...loginMsg
     }
-
+    console.log(identity, credential, userRole)
     const loginAuth = await Auth.findOne({
       where: {
         identity,
@@ -55,22 +55,20 @@ class UserModel {
     await User.create({
       nickName: user.nickName
     }).then(async () => {
-      await User.findOne({
+      const newUser = await User.findOne({
         where: {
           nickName: user.nickName
         }
-      }).then(async (newUser) => {
-        await Auth.create({
-          where: {
-            userId: newUser.userId,
-            identityType: user.identityType,
-            identity: user.identity,
-            credential: user.credential,
-            userRole: user.userRole,
-            status: 0,
-          }
-        })
       })
+      await Auth.create({
+          userId: newUser.userId,
+          identityType: user.identityType,
+          identity: user.identity,
+          credential: user.credential,
+          userRole: user.userRole,
+          status: 0,
+        }
+      )
     })
     // TODO: 将登录信息添加进user_auths
     return true
