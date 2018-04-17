@@ -61,8 +61,8 @@ class BookController {
    * 查询书籍数组
    */
   static async findBooks(ctx) {
-    const bookName = ctx.params.bookName
-    const author = ctx.params.author
+    const bookName = ctx.query.bookName
+    const author = ctx.query.author
 
     const books
     if (bookName) {
