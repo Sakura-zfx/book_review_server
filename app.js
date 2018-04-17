@@ -2,7 +2,7 @@
  * @Author: sakura.zhang
  * @Date: 2018-03-19 19:42:12
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-04-16 14:02:32
+ * @Last Modified time: 2018-04-16 23:50:48
  */
 import Koa from 'koa'
 import session from 'koa-session'
@@ -13,7 +13,9 @@ import logger from 'koa-logger'
 import jwt from 'koa-jwt'
 import errorHandle from './app/middlewares/errorHandle'
 import router from './app/api/index'
-// import CSRF from 'koa-csrf'
+import path from 'path'
+import staticResource from 'koa-static'
+import historyApiFallback from 'koa-history-api-fallback'
 
 const app = new Koa();
 const client = redis.createClient(6379, '127.0.0.1')
@@ -57,6 +59,9 @@ app.use(errorHandle)
 
 app.use(router.routes())
 app.use(router.allowedMethods())
+
+app.use(historyApiFallback())
+app.use(staticResource(path.resolve('dist')))
 
 app.listen(3000)
 console.log('listen to 3000...')
