@@ -25,7 +25,7 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: true
 		},
 		credential: {
-			type: DataTypes.STRING(32),
+			type: DataTypes.STRING(128),
 			allowNull: true
 		},
 		userRole: {
@@ -36,6 +36,11 @@ module.exports = function(sequelize, DataTypes) {
 				model: 'user_role',
 				key: 'id'
 			}
+		},
+		status: {
+			type: DataTypes.INTEGER(2),
+			allowNull: true,
+			defaultValue: '0'
 		}
 	}, {
 		tableName: 'user_auths'

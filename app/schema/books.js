@@ -9,19 +9,23 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		bookName: {
 			type: DataTypes.STRING(255),
-			allowNull: false
+			allowNull: false,
+			defaultValue: ''
 		},
 		bookPic: {
 			type: DataTypes.STRING(255),
-			allowNull: true
+			allowNull: true,
+			defaultValue: ''
 		},
 		author: {
 			type: DataTypes.STRING(255),
-			allowNull: true
+			allowNull: true,
+			defaultValue: ''
 		},
 		publishHouse: {
 			type: DataTypes.STRING(255),
-			allowNull: true
+			allowNull: true,
+			defaultValue: ''
 		},
 		publishDate: {
 			type: DataTypes.DATEONLY,
@@ -29,11 +33,13 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		pageNumber: {
 			type: DataTypes.INTEGER(11),
-			allowNull: true
+			allowNull: true,
+			defaultValue: '0'
 		},
 		price: {
 			type: DataTypes.DECIMAL,
-			allowNull: true
+			allowNull: true,
+			defaultValue: '0.00'
 		}
 	}, {
 		tableName: 'books'

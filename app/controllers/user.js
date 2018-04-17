@@ -1,4 +1,3 @@
-import userMode from '../models/user'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt-nodejs'
 import UserModel from '../models/user';
@@ -110,7 +109,7 @@ class UserController {
 
     const userInfo = await UserModel.findUserById(userId)
 
-    cxt.body = {
+    ctx.body = {
       code: 200,
       msg: 'success',
       data: userInfo

@@ -10,10 +10,6 @@ module.exports = function(sequelize, DataTypes) {
 		cateName: {
 			type: DataTypes.STRING(20),
 			allowNull: true
-		},
-		tags: {
-			type: DataTypes.STRING(255),
-			allowNull: true
 		}
 	}, {
 		tableName: 'cates'

@@ -25,6 +25,7 @@ class BookModel {
   }
   // 通过作者查找书籍数组
   static async findBooksByAuthor(author) {
+    const Op = sequelize.Op
     const books = await Book.findAll({
       where: {
         author: {
