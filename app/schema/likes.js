@@ -5,7 +5,8 @@ module.exports = function(sequelize, DataTypes) {
 		id: {
 			type: DataTypes.INTEGER(11),
 			allowNull: false,
-			primaryKey: true
+			primaryKey: true,
+			autoIncrement: true
 		},
 		typeId: {
 			type: DataTypes.INTEGER(11),
@@ -25,7 +26,8 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		status: {
 			type: DataTypes.STRING(20),
-			allowNull: true
+			allowNull: true,
+			defaultValue: ''
 		},
 		timestamps: {
 			type: DataTypes.DATE,

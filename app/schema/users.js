@@ -10,19 +10,23 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		nickName: {
 			type: DataTypes.STRING(100),
-			allowNull: false
+			allowNull: false,
+			defaultValue: ''
 		},
 		picture: {
 			type: DataTypes.STRING(100),
-			allowNull: true
+			allowNull: true,
+			defaultValue: ''
 		},
 		userGender: {
 			type: DataTypes.STRING(10),
-			allowNull: true
+			allowNull: true,
+			defaultValue: ''
 		},
 		tureName: {
 			type: DataTypes.STRING(100),
-			allowNull: true
+			allowNull: true,
+			defaultValue: ''
 		},
 		birth: {
 			type: DataTypes.DATEONLY,
@@ -30,7 +34,8 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		address: {
 			type: DataTypes.STRING(200),
-			allowNull: true
+			allowNull: true,
+			defaultValue: ''
 		},
 		registerDate: {
 			type: DataTypes.DATE,

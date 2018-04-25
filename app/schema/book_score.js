@@ -5,11 +5,13 @@ module.exports = function(sequelize, DataTypes) {
 		id: {
 			type: DataTypes.INTEGER(11),
 			allowNull: false,
-			primaryKey: true
+			primaryKey: true,
+			autoIncrement: true
 		},
 		score: {
 			type: "DOUBLE(3,2)",
-			allowNull: true
+			allowNull: true,
+			defaultValue: '0.00'
 		},
 		bookId: {
 			type: DataTypes.INTEGER(11),

@@ -5,19 +5,23 @@ module.exports = function(sequelize, DataTypes) {
 		authorId: {
 			type: DataTypes.INTEGER(11),
 			allowNull: false,
-			primaryKey: true
+			primaryKey: true,
+			autoIncrement: true
 		},
 		authorName: {
 			type: DataTypes.STRING(255),
-			allowNull: false
+			allowNull: false,
+			defaultValue: ''
 		},
 		authorPic: {
 			type: DataTypes.STRING(255),
-			allowNull: true
+			allowNull: true,
+			defaultValue: ''
 		},
 		authorGender: {
 			type: DataTypes.STRING(10),
-			allowNull: true
+			allowNull: true,
+			defaultValue: ''
 		},
 		birth: {
 			type: DataTypes.DATEONLY,
@@ -25,7 +29,8 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		country: {
 			type: DataTypes.STRING(255),
-			allowNull: true
+			allowNull: true,
+			defaultValue: ''
 		},
 		authorIntro: {
 			type: DataTypes.TEXT,
@@ -33,7 +38,8 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		authorWorks: {
 			type: DataTypes.STRING(255),
-			allowNull: true
+			allowNull: true,
+			defaultValue: ''
 		}
 	}, {
 		tableName: 'authors'

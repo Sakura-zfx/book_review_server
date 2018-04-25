@@ -2,7 +2,7 @@
  * @Author: sakura.zhang
  * @Date: 2018-03-12 00:14:59
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-04-18 00:46:44
+ * @Last Modified time: 2018-04-22 18:53:37
  */
 import Router from 'koa-router'
 import UserController from '../controllers/user'
@@ -30,10 +30,13 @@ router
   .put('/cate', )
   .delete('/cate/:cateId', )
   .get('/tag', ) // 标签
+  .get('/book/:bookId/tag', )
   .post('/tag', )
   .put('/tag', )
   .delete('/tag/:tagId', )
   .get('/comment', ) // 评论
+  .get('/book/:bookId/comment', )
+  .get('/user/:userId/comment', )
   .post('/comment', )
   .delete('/comment/:commentId', )
   .get('/reply', ) // 回复

@@ -5,11 +5,13 @@ module.exports = function(sequelize, DataTypes) {
 		id: {
 			type: DataTypes.INTEGER(11),
 			allowNull: false,
-			primaryKey: true
+			primaryKey: true,
+			autoIncrement: true
 		},
 		commentId: {
 			type: DataTypes.INTEGER(11),
 			allowNull: true,
+			defaultValue: '0',
 			references: {
 				model: 'comments',
 				key: 'id'
@@ -17,7 +19,8 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		replyId: {
 			type: DataTypes.INTEGER(11),
-			allowNull: true
+			allowNull: true,
+			defaultValue: '0'
 		},
 		replyType: {
 			type: DataTypes.CHAR(11),

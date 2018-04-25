@@ -8,7 +8,6 @@ class BookController {
     const book = ctx.request.body
     // 增加书籍
     await BookModel.createBook(book)
-    // TODO: 添加默认的分类
 
     ctx.body = {
       code: 200,
