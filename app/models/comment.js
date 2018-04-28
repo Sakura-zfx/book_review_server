@@ -15,7 +15,7 @@ class CommentModel {
     return comment
   }
   /**
-   * 获取指定书籍下书评
+   * 获取指定书籍下书评(可分页，默认第一页)
    * @param {Number} bookId 书籍id
    * @param {String} topicType 评论是针对谁的（书籍，用户）
    * @param {Number} topicId 评论类型（书评，短评）
@@ -25,9 +25,13 @@ class CommentModel {
       bookId,
       topicType,
       topicId,
+      pageId,
+      limit,
     } = {
       ...searchMsg  
       }
+    pageId = pageId ? 1 : pageId
+    limit = limit > 20 ? 20 : limit
     // 构造查询体
     const where = {}
     bookId ? where.bookId = bookId : ''
@@ -35,7 +39,9 @@ class CommentModel {
     topicId ? where.topicId = topicId : ''    
 
     const comments = await Comment.findAll({
-      where: where
+      where: where,
+      offset: pageId * limit,
+      limit: limit,
     })
     return comments
   }

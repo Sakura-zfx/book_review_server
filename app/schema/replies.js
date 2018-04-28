@@ -45,6 +45,10 @@ module.exports = function(sequelize, DataTypes) {
 				model: 'users',
 				key: 'userId'
 			}
+		},
+		publishTime: {
+			type: DataTypes.DATE,
+			allowNull: true
 		}
 	}, {
 		tableName: 'replies'
