@@ -1,4 +1,5 @@
 import BookModel from '../models/book'
+import { FIND_WRONG, FIND_SUCCESS, MOD_SUCCESS, ADD_WRONG, ADD_SUCCESS, DEL_SUCCESS, DEL_WRONG, MOD_WRONG } from '../../utils/constants';
 
 class BookController {
   /**
@@ -7,13 +8,13 @@ class BookController {
   static async createBook(ctx) {
     const book = ctx.request.body
     // 增加书籍
-    await BookModel.createBook(book)
+    const data = await BookModel.createBook(book)
 
-    ctx.body = {
-      code: 200,
-      msg: 'create success'
+    data !== false ? ctx.body = {
+      ...ADD_SUCCESS
+    } : ctx.body = {
+      ...ADD_WRONG  
     }
-
   }
   /**
    * 删除
@@ -21,11 +22,12 @@ class BookController {
   static async deleteBook(ctx) {
     const bookId = ctx.params.bookId
 
-    await BookModel.deleteBook(bookId)
+    const data = await BookModel.deleteBook(bookId)
 
-    ctx.body = {
-      code: 200,
-      msg: 'delete success'
+    data !== false ? ctx.body = {
+      ...DEL_SUCCESS
+    } : ctx.body = {
+      ...DEL_WRONG  
     }
   }
   /**
@@ -34,11 +36,12 @@ class BookController {
   static async modifyBook(ctx) {
     const book = ctx.request.book
 
-    await BookModel.modifyBook(book)
+    const data = await BookModel.modifyBook(book)
 
-    ctx.body = {
-      code: 200,
-      msg: 'modify success'
+    data !== false ? ctx.body = {
+      ...MOD_SUCCESS
+    } : ctx.body = {
+      ...MOD_WRONG  
     }
   }
   /**
@@ -49,10 +52,11 @@ class BookController {
 
     const book = await BookModel.findBookById(bookId)
 
-    ctx.body = {
-      code: 200,
-      msg: 'search success',
+    book !== false ? ctx.body = {
+      ...FIND_SUCCESS,
       data: book
+    } : ctx.body = {
+      ...FIND_WRONG  
     }
   }
 
@@ -63,17 +67,23 @@ class BookController {
     const bookName = ctx.query.bookName
     const author = ctx.query.author
 
-    const books
+    let books = null
     if (bookName) {
       books = await BookModel.findBookByName(bookName)
     } else if (author) {
       books = await BookModel.findBooksByAuthor(author)
+    } else {
+      ctx.body = {
+        code: -90006,
+        msg: '参数错误，没有查询条件'
+      }
     }
 
-    ctx.body = {
-      code: 200,
-      msg: 'search success',
+    books !== false ? ctx.body = {
+      ...FIND_SUCCESS,
       data: books
+    } : ctx.body = {
+      ...FIND_WRONG  
     }
   }
 }

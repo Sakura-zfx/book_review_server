@@ -2,12 +2,14 @@
  * @Author: sakura.zhang
  * @Date: 2018-03-12 00:14:59
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-05-01 22:51:45
+ * @Last Modified time: 2018-05-02 02:02:11
  */
 import Router from 'koa-router'
 import AuthorController from '../controllers/author'
-import UserController from '../controllers/user'
 import BookContorller from '../controllers/book'
+import CateController from '../controllers/cate'
+import CollectionController from '../controllers/collection'
+import UserController from '../controllers/user'
 
 const router = new Router({
   prefix: '/api'
@@ -29,17 +31,19 @@ router
   .put('/book', BookContorller.modifyBook)
   .delete('/book/:bookId', BookContorller.deleteBook)
 
-  .get('/book/user/:userId/collection', ) // 书籍收藏
-  .get('/book/:bookId/collection', )
-  .post('/book/collection', )
-  .delte('/book/collection/:id')
+  .get('/book/user/:userId/collection', CollectionController.getCollectionsByUser) // 书籍收藏
+  .get('/book/:bookId/collection', CollectionController.getCountByBook)
+  .get('/book/:bookId/user/:userId/collection', CollectionController.getStatus)
+  .post('/book/collection', CollectionController.addCollection)
+  .put('/book/collection', CollectionController.modifyStatus)
+  .delte('/book/collection/:id', CollectionController.cancelCollection)
 
   .get('/book/user/:userId/recommendation', ) // 书籍推荐
 
-  .get('/cate', ) // 分类
-  .post('/cate', )
-  .put('/cate', )
-  .delete('/cate/:cateId', )
+  .get('/cate', CateController.findCates) // 分类
+  .post('/cate', CateController.createCate)
+  .put('/cate', CateController.modifyCate)
+  .delete('/cate/:cateId', CateController.deleteCate)
 
   .get('/tag', ) // 标签
   .get('/book/:bookId/tag', )

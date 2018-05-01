@@ -34,7 +34,7 @@ class AuthorController {
       authorWorks,
     })
 
-    data ? ctx.body = {
+    data !== false ? ctx.body = {
       ...ADD_SUCCESS
     } : ctx.body = {
       ...ADD_WRONG
@@ -46,7 +46,7 @@ class AuthorController {
 
     const data = await AuthorModel.deleteAuthor(authorId)
 
-    data ? ctx.body = {
+    data !== false ? ctx.body = {
       ...DEL_SUCCESS
     } : ctx.body = {
       ...DEL_WRONG
@@ -64,9 +64,9 @@ class AuthorController {
       authorIntro,
       authorWorks,
     } = {
-      ...ctx.request.body  
-      }
-    
+      ...ctx.request.body
+    }
+
     const data = await AuthorModel.modifyAuthor({
       authorId,
       authorName,
@@ -78,11 +78,11 @@ class AuthorController {
       authorWorks,
     })
 
-    data ? ctx.body = {
+    data !== false ? ctx.body = {
       ...MOD_SUCCESS
     } : ctx.body = {
       ...MOD_WRONG
-    }    
+    }
   }
 
   static async findAuthor(ctx) {
@@ -92,20 +92,20 @@ class AuthorController {
     const data = null
     if (authorId) {
       data = await AuthorModel.findAuthorById(authorId)
-      ctx.body = {
-        ...FIND_SUCCESS,
-        data
-      }
     } else if (authorName) {
       data = await AuthorModel.findAuthorByName(authorName)
-      ctx.body = {
-        ...FIND_SUCCESS,
-        data
-      }
     } else {
       ctx.body = {
-        ...FIND_WRONG
+        code: -90006,
+        msg: '参数错误，没有查询条件'
       }
+    }
+
+    data !== false ? ctx.body = {
+      ...FIND_SUCCESS,
+      data
+    } : ctx.body = {
+      ...FIND_WRONG
     }
   }
 }

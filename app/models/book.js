@@ -16,9 +16,12 @@ class BookModel {
   }
   // 通过书籍名查找书籍数组
   static async findBookByName(bookName) {
+    const Op = sequelize.Op    
     const books = await Book.findAll({
       where: {
-        bookName
+        bookName: {
+          [Op.like]: bookName
+        }
       }
     })
     return books
@@ -51,7 +54,7 @@ class BookModel {
     } = {
       ...book  
     }
-    await Book.create({
+    const res = await Book.create({
       bookName,
       bookPic,
       author,
@@ -60,32 +63,34 @@ class BookModel {
       pageNumber,
       price,
     })
-    return true
+    return res
   }
 
   /**
    * 修改书籍
    */
   static async modifyBook(book) {
-    await Book.update({
+    const res = await Book.update({
       ...book
     }, {
         where: {
         bookId: book.bookId
       }  
       })
-    return true
+    
+    return res
   }
   /**
    * 删除书籍
    */
   static async deleteBook(bookId) {
-    await Book.destroy({
+    const res = await Book.destroy({
       where: {
         bookId
       }
     })
-    return true
+
+    return res
   }
 }
 

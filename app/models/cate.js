@@ -8,10 +8,10 @@ class CateModel {
    * @param {*} cate 
    */
   static async createCate(cate) {
-    await Cate.create({
+    const res = await Cate.create({
       cateName: cate.cateName
     })
-    return true
+    return res
   }
 
   /**
@@ -19,12 +19,12 @@ class CateModel {
    * @param {*} cateId 
    */
   static async deleteCate(cateId) {
-    await Cate.destroy({
+    const res = await Cate.destroy({
       where: {
         id: cateId
       }
     })
-    return true
+    return res
   }
 
   /**
@@ -32,18 +32,15 @@ class CateModel {
    * @param {*} cate 
    */
   static async modifyCate(cate) {
-    const {
-      cateId,
-      cateName
-    } = { ...cate
-    }
-    await Cate.update({
-      cateName: cateName
+    const res = await Cate.update({
+      cateName: cate.cateName
     }, {
       where: {
-        id: cateId
+        id: cate.cateId
       }
-    })
+      })
+    
+    return res
   }
   /**
    * 查询所有类别

@@ -13,10 +13,29 @@ class CollectionModel {
     return data
   }
 
-  static async getCollectionByBook(bookId) {
-    const data = await Collection.findAndCountAll({
+  static async getCountByBook(bookId) {
+    const count = await Collection.count({
       where: {
         bookId
+      }
+    })
+
+    return count
+  }
+
+  // 获取用户对当前书籍的收藏状态
+  static async getStatus(search) {
+    const {
+      bookId,
+      userId
+    } = {
+      ...search
+    }
+
+    const data = await Collection.findOne({
+      where: {
+        bookId,
+        userId
       }
     })
 
@@ -27,27 +46,41 @@ class CollectionModel {
     const {
       bookId,
       userId,
+      status,
       collectionTime
     } = {
-      ...collection  
+      ...collection
     }
-    await Collection.create({
+    const res = await Collection.create({
       bookId,
       userId,
+      status,
       collectionTime
     })
 
-    return true
+    return res
   }
 
-  static async cancelCollection(id) {
-    await Collection.destroy({
+  static async modifyCollectionStatus(id, status) {
+    const res = Collection.update({
+      status
+    }, {
       where: {
         id
       }
     })
 
-    return true
+    return res
+  }
+
+  static async cancelCollection(id) {
+    const res = await Collection.destroy({
+      where: {
+        id
+      }
+    })
+
+    return res
   }
 }
 

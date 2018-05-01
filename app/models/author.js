@@ -6,28 +6,28 @@ class AuthorModel {
    * 增加作者
    */
   static async createAuthor(author) {
-    await Author.create({
+    const res = await Author.create({
       ...author
     })
-    return true
+    return res
   }
   /**
    * delete
    */
   static async deleteAuthor(authorId) {
-    await Author.destroy({
+    const res = await Author.destroy({
       where: {
         authorId
       }
     })
-    return true
+    return res
   }
   /**
    * 修改作者信息
    * @param {*} author 
    */
   static async modifyAuthor(author) {
-    await Author.update({
+    const res = await Author.update({
       ...author
     }, {
       where: {
@@ -35,7 +35,7 @@ class AuthorModel {
       }
       })
     
-    return true
+    return res
   }
   /**
    * search
