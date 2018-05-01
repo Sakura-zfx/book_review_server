@@ -24,6 +24,11 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.TEXT,
 			allowNull: true
 		},
+		score: {
+			type: "DOUBLE(3,2)",
+			allowNull: true,
+			defaultValue: '0.00'
+		},
 		bookId: {
 			type: DataTypes.INTEGER(11),
 			allowNull: true,

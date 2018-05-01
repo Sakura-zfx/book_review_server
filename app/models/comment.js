@@ -19,6 +19,8 @@ class CommentModel {
    * @param {Number} bookId 书籍id
    * @param {String} topicType 评论是针对谁的（书籍，用户）
    * @param {Number} topicId 评论类型（书评，短评）
+   * @param {Number} pageId 页数
+   * @param {Number} limit 每页的数量
    */ 
   static async findCommentByBook(searchMsg) {
     const {
@@ -27,21 +29,21 @@ class CommentModel {
       topicId,
       pageId,
       limit,
+      order,
     } = {
       ...searchMsg  
       }
-    pageId = pageId ? 1 : pageId
-    limit = limit > 20 ? 20 : limit
     // 构造查询体
     const where = {}
     bookId ? where.bookId = bookId : ''
     topicType ? where.topicType = topicType : ''
     topicId ? where.topicId = topicId : ''    
 
-    const comments = await Comment.findAll({
+    const comments = await Comment.findAndCountAll({
       where: where,
       offset: pageId * limit,
       limit: limit,
+      order: [['publishTime', order]],
     })
     return comments
   }
@@ -66,6 +68,7 @@ class CommentModel {
       topicId,
       topicType,
       content,
+      score,
       bookId,
       fromUid
     } = {
@@ -76,6 +79,7 @@ class CommentModel {
       topicType,
       content,
       bookId,
+      score,      
       fromUid
     })
     return true

@@ -34,7 +34,8 @@
     "qiniu": "^7.1.2",
     "redis": "^2.8.0",
     "sequelize": "^4.36.0",
-    "uri-utils": "^1.0.4"
+    "uri-utils": "^1.0.4",
+    "validator": "^9.4.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
