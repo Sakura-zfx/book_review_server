@@ -1,6 +1,8 @@
 import sequelize from '../../config/connect'
 
 const Book = sequelize.import('../schema/books.js')
+const Book_Tag = sequelize.import('../schema/book_tag.js')
+const Comment = sequelize.import('../schema/comments.js')
 
 class BookModel {
   /**
@@ -13,6 +15,49 @@ class BookModel {
       }
     })
     return book
+  }
+  // 查询标签下的书籍
+  static async findBookByTag(tagId, offset, limit) {
+    const books = await Book_Tag.findAndCountAll({
+      where: {
+        tagId
+      },
+      attributes: ['bookId'],
+      offset,
+      limit
+    })
+
+    // 通过bookId 查询书籍信息
+    if (books) {
+      books.forEach(async (item) => {
+        const book_msg = await Book.findOne({
+          where: {
+            bookId: item.bookId
+          }
+        })
+
+        const SUM = await Comment.sum('score', {
+          where: {
+            bookId: item.bookId
+          } 
+        })
+
+        const COUNT = await Comment.count({
+          where: {
+            bookId: item.bookId
+          }
+        })
+        
+        const AVG = (SUM / COUNT).toFixed(2)
+
+        item = {
+          avgScore: AVG,
+          ...book_msg
+        }
+      })
+    }
+
+    return books
   }
   // 通过书籍名查找书籍数组
   static async findBookByName(bookName) {

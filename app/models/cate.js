@@ -51,4 +51,4 @@ class CateModel {
   }
 }
 
-return CateModel
+export default CateModel

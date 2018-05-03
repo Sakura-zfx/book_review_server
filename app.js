@@ -2,7 +2,7 @@
  * @Author: sakura.zhang
  * @Date: 2018-03-19 19:42:12
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-04-16 23:50:48
+ * @Last Modified time: 2018-05-04 03:06:55
  */
 import Koa from 'koa'
 import session from 'koa-session'
@@ -11,6 +11,7 @@ import redis from 'redis'
 import bodyparser from 'koa-bodyparser'
 import logger from 'koa-logger'
 import jwt from 'koa-jwt'
+import {secret} from './config/secret'
 import errorHandle from './app/middlewares/errorHandle'
 import router from './app/api/index'
 import path from 'path'
@@ -46,16 +47,16 @@ app.use(bodyparser({
 // 日志记录中间件
 app.use(logger())
 
+// koa-jwt错误处理中间件
+app.use(errorHandle)
+
 // koa-jwt中间件使用
-const secret = 'jwt_koa_secret' // 用于加密的key
 app.use(jwt({
   secret,
 }).unless({
-  path: [/\/api\/register/, /\/api\/login/],
+  path: [/\/api\/register/, /\/api\/login/, /\/api\/user\/create/],
 }))
 
-// koa-jwt错误处理中间件
-app.use(errorHandle)
 
 app.use(router.routes())
 app.use(router.allowedMethods())

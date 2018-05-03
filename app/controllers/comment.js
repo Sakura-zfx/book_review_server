@@ -55,7 +55,7 @@ class CommentController {
     }
     // 获取评论下的回复数量
     if (commentsData) {
-      commentsData.rows.forEach(item => {
+      commentsData.rows.forEach(async (item) => {
         const commentId = item.id
         const count_reply = await ReplyModel.getReplyCount_Com(commentId)
 

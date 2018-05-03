@@ -17,7 +17,7 @@ class UserModel {
     } = {
       ...loginMsg
     }
-    console.log(identity, credential, userRole)
+    
     const loginAuth = await Auth.findOne({
       where: {
         identity,
@@ -27,10 +27,6 @@ class UserModel {
 
     return loginAuth
   }
-
-  /**
-   * 
-   */
 
   /**
    * 查找用户信息
@@ -70,7 +66,6 @@ class UserModel {
         }
       )
     })
-    // TODO: 将登录信息添加进user_auths
     return true
   }
 
@@ -84,7 +79,8 @@ class UserModel {
       where: {
         userId: user.userId
       }
-    })
+      })
+    return true
   }
 
   /**

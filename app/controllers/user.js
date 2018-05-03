@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt-nodejs'
+import {secret} from '../../config/secret'
 import UserModel from '../models/user';
 import {
   PASSWORD_WRONG,
@@ -23,7 +24,7 @@ class UserController {
           userId: user.userId,
           userName: user.nickName
         }
-        const token = jwt.sign(userToken, 'jwt_koa_secret', { expiresIn: '3h' })
+        const token = jwt.sign(userToken, secret, { expiresIn: '3h' })
         
         ctx.body = {
           code: 200,
@@ -39,6 +40,23 @@ class UserController {
       ctx.body = USER_NOT_EXIST
     }
   }
+
+  // 刷新登录令牌
+  static async freshToken(ctx) {
+    const user = ctx.request.body
+    const userToken = {
+      userId: user.userId,
+      userName: user.nickName
+    }
+    const token = jwt.sign(userToken, secret, { expiresIn: '3h' })
+
+    ctx.body = {
+      bean: {
+        token
+      }
+    }
+  }
+
   /**
    * 登出
    */
@@ -65,10 +83,24 @@ class UserController {
         user.nickName = user.nickName ? user.nickName : `user_${user.identity}`
 
         await UserModel.createUser(user)
+        // 签发token
+        const loginAuth = await UserModel.getAuth({
+          identity: user.identity,
+          userRole: user.userRole
+        })
+        const newUser = await UserModel.findUserById(loginAuth.userId)
+        const userToken = {
+          userId: newUser.userId,
+          userName: newUser.nickName
+        }
+        const token = jwt.sign(userToken, secret, { expiresIn: '3h' })
 
         ctx.body = {
           code: 200,
-          msg: '创建成功'
+          msg: '创建成功',
+          bean: {
+            token
+          }
         }
       }
     } else {

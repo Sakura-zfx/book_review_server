@@ -1,6 +1,7 @@
 import sequelize from '../../config/connect'
 
 const Tag = sequelize.import('../schema/tags.js')
+const Book_Tag = sequelize.import('../schema/book_tag.js')
 
 class TagModel {
   /**
@@ -8,11 +9,11 @@ class TagModel {
    * @param {*} tag 
    */
   static async createTag(tag) {
-    await Tag.create({
+    const res = await Tag.create({
       tagName: tag.tagName,
       cateId: tag.cateId
     })
-    return true
+    return res
   }
 
   /**
@@ -20,12 +21,12 @@ class TagModel {
    * @param {*} tagId 
    */
   static async deleteTag(tagId) {
-    await Tag.destroy({
+    const res = await Tag.destroy({
       where: {
         id: tagId
       }
     })
-    return true
+    return res
   }
 
   /**
@@ -39,7 +40,7 @@ class TagModel {
       cateId,
     } = { ...tag
     }
-    await Tag.update({
+    const res = await Tag.update({
       tagName: tagName,
       cateId: cateId
     }, {
@@ -47,6 +48,7 @@ class TagModel {
         id: tagId
       }
     })
+    return res
   }
   /**
    * 查询所有标签
@@ -54,6 +56,16 @@ class TagModel {
   static async findTags() {
     const tags = await Tag.findAll()
     return tags
+  }
+  // 查询标签名字
+  static async getTagName(tagId) {
+    const name = await Tag.findAll({
+      where: {
+        id: tagId
+      }
+    })
+
+    return name
   }
 
   /**
@@ -67,6 +79,28 @@ class TagModel {
     })
     return tags
   }
+
+  // 获取书籍下的tags
+  static async findTagsByBook(bookId) {
+    const tags = await Book_Tag.findAll({
+      where: {
+        bookId: bookId
+      },
+      attributes: ['tagId']
+    })
+    return tags
+  }
+
+  // 获取tag下的书籍数量
+  static async getBookCount(tagId) {
+    const count = await Book_Tag.count({
+      where: {
+        tagId: tagId
+      }
+    })
+
+    return count
+  }
 }
 
-return TagModel
+export default TagModel

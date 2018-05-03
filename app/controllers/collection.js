@@ -1,4 +1,4 @@
-import CollectionModel from '../models/collection'
+import CollectionModel from '../models/book_collection'
 import {
   FIND_SUCCESS,
   FIND_WRONG,

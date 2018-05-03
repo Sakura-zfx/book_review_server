@@ -18,7 +18,7 @@ class ReplyController {
 
     // 获取每条回复下的回复数量
     if (replies) {
-      replies.forEach(item => {
+      replies.forEach(async (item) => {
         const count = await ReplyModel.getReplyCount_Rep(commentId, item.id)
 
         item.replyCount = count
@@ -42,7 +42,7 @@ class ReplyController {
 
     // 获取回复下的回复数量
     if (data) {
-      data.forEach(item => {
+      data.forEach(async (item) => {
         const count = await ReplyModel.getReplyCount_Rep(commentId, item.id)
 
         item.replyCount = count

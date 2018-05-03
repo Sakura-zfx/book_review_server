@@ -89,7 +89,7 @@ class AuthorController {
     const authorId = ctx.request.body.authorId
     const authorName = ctx.request.body.authorName
 
-    const data = null
+    let data = null
     if (authorId) {
       data = await AuthorModel.findAuthorById(authorId)
     } else if (authorName) {

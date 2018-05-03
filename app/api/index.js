@@ -2,7 +2,7 @@
  * @Author: sakura.zhang
  * @Date: 2018-03-12 00:14:59
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-05-04 00:08:30
+ * @Last Modified time: 2018-05-04 03:21:35
  */
 import Router from 'koa-router'
 import AuthorController from '../controllers/author'
@@ -12,6 +12,7 @@ import CollectionController from '../controllers/collection'
 import UserController from '../controllers/user'
 import CommentController from '../controllers/comment';
 import ReplyController from '../controllers/reply';
+import TagController from '../controllers/tag';
 
 const router = new Router({
   prefix: '/api'
@@ -23,7 +24,7 @@ router
   .post('/register', UserController.createUser)
 
   .get('/user/:userId', UserController.findUserById) // 用户
-  .post('/user', UserController.createUser)
+  .post('/user/create', UserController.createUser)
   .put('/user', UserController.modifyUser)
   .delete('/user/:userId', UserController.deleteUser)
 
@@ -38,20 +39,21 @@ router
   .get('/book/:bookId/user/:userId/collection', CollectionController.getStatus)
   .post('/book/collection', CollectionController.addCollection)
   .put('/book/collection', CollectionController.modifyStatus)
-  .delte('/book/collection/:id', CollectionController.cancelCollection)
+  .delete('/book/collection/:id', CollectionController.cancelCollection)
 
-  .get('/book/user/:userId/recommendation', ) // 书籍推荐
+  // .get('/book/user/:userId/recommendation', ) // 书籍推荐
 
   .get('/cate', CateController.findCates) // 分类
   .post('/cate', CateController.createCate)
   .put('/cate', CateController.modifyCate)
   .delete('/cate/:cateId', CateController.deleteCate)
 
-  .get('/tag', ) // 标签
-  .get('/book/:bookId/tag', )
-  .post('/tag', )
-  .put('/tag', )
-  .delete('/tag/:tagId', )
+  .get('/tag', TagController.getAllTags) // 标签
+  .get('/book/:bookId/tag', TagController.getBookTags)
+  .get('/cate/:cateId/tag', TagController.getCateTags)
+  .post('/tag', TagController.addTag)
+  .put('/tag', TagController.modifyTag)
+  .delete('/tag/:tagId', TagController.deleteTag)
 
   .get('/book/:bookId/comment', CommentController.getBookComments) // 评论
   .get('/user/:userId/comment', CommentController.getUserComments)

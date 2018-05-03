@@ -17,7 +17,7 @@ class CateController {
     } = {
       ...ctx.request.body
     }
-
+    console.log(ctx.request.body)
     const data = await CateModel.createCate({
       cateName
     })

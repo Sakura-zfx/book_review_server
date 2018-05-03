@@ -2,7 +2,7 @@
  * @Author: sakura.zhang
  * @Date: 2018-04-08 23:51:59
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-05-01 17:49:12
+ * @Last Modified time: 2018-05-04 03:25:39
  */
 // 自定义成功返回信息
 export const LOGIN_SUCCESS = {
@@ -33,11 +33,26 @@ export const FIND_SUCCESS = {
  * 自定义失败返回信息
  * {code: 200,msg: 'xxx'}
  */
-export const PASSWORD_WRONG = '密码错误'
-export const USER_NOT_EXIST = '该用户不存在'
-export const USER_PERMISSION_ERROR = '用户权限错误'
-export const USER_HAS_BEEN_BANNED = '您的账号已被封禁，请联系管理员'
-export const USER_HAS_EXIST = '该用户已经存在'
+export const PASSWORD_WRONG = {
+  code: -1,
+  msg: '密码错误'
+}
+export const USER_NOT_EXIST = {
+  code: -1,
+  msg: '该用户不存在'
+}
+export const USER_PERMISSION_ERROR = {
+  code: -1,
+  msg: '用户权限错误'
+}
+export const USER_HAS_BEEN_BANNED = {
+  code: -1,
+  msg: '您的账号已被封禁，请联系管理员'
+}
+export const USER_HAS_EXIST = {
+  code: -1,
+  msg: '该用户已经存在'
+}
 
 export const LOGIN_WRONG = {
   code: -111,
