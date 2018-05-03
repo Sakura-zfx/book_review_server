@@ -4,21 +4,10 @@ const Comment = sequelize.import('../schema/comments.js')
 
 class CommentModel {
   /**
-   * 通过id查询评论详细信息
-   */
-  static async findCommentById(commentId) {
-    const comment = await Comment.findOne({
-      where: {
-        id: commentId
-      }
-    })
-    return comment
-  }
-  /**
    * 获取指定书籍下书评(可分页，默认第一页)
    * @param {Number} bookId 书籍id
    * @param {String} topicType 评论是针对谁的（书籍，用户）
-   * @param {Number} topicId 评论类型（书评，短评）
+   * @param {Number} topicId 评论类型（书评2，短评1）
    * @param {Number} pageId 页数
    * @param {Number} limit 每页的数量
    */ 
@@ -52,7 +41,7 @@ class CommentModel {
    * @param {*} userId 
    */
   static async findCommentsByUserId(userId) {
-    const comments = await Comment.findAll({
+    const comments = await Comment.findAndCountAll({
       where: {
         fromUid: userId
       }
@@ -70,44 +59,46 @@ class CommentModel {
       content,
       score,
       bookId,
-      fromUid
+      fromUid,
+      publishTime
     } = {
       ...comment  
     }
-    await Comment.create({
+    const res = await Comment.create({
       topicId,
       topicType,
       content,
       bookId,
       score,      
-      fromUid
+      fromUid,
+      publishTime
     })
-    return true
+    return res
   }
 
   /**
    * 修改评论(暂时不做)
    */
   static async modifyComment(comment) {
-    await Comment.update({
+    const res = await Comment.update({
       ...comment
     }, {
         where: {
         id: comment.id
       }  
       })
-    return true
+    return res
   }
   /**
    * 删除评论
    */
   static async deleteComment(commentId) {
-    await Comment.destroy({
+    const res = await Comment.destroy({
       where: {
         id: commentId
       }
     })
-    return true
+    return res
   }
 }
 

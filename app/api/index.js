@@ -2,7 +2,7 @@
  * @Author: sakura.zhang
  * @Date: 2018-03-12 00:14:59
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-05-02 02:02:11
+ * @Last Modified time: 2018-05-04 00:08:30
  */
 import Router from 'koa-router'
 import AuthorController from '../controllers/author'
@@ -10,6 +10,8 @@ import BookContorller from '../controllers/book'
 import CateController from '../controllers/cate'
 import CollectionController from '../controllers/collection'
 import UserController from '../controllers/user'
+import CommentController from '../controllers/comment';
+import ReplyController from '../controllers/reply';
 
 const router = new Router({
   prefix: '/api'
@@ -51,15 +53,15 @@ router
   .put('/tag', )
   .delete('/tag/:tagId', )
 
-  .get('/comment', ) // 评论
-  .get('/book/:bookId/comment', )
-  .get('/user/:userId/comment', )
-  .post('/comment', )
-  .delete('/comment/:commentId', )
+  .get('/book/:bookId/comment', CommentController.getBookComments) // 评论
+  .get('/user/:userId/comment', CommentController.getUserComments)
+  .post('/comment', CommentController.createComment)
+  .delete('/comment/:commentId', CommentController.deleteComment)
 
-  .get('/reply', ) // 回复
-  .post('/reply', ) 
-  .delete('/reply/:id', )
+  .get('/comment/:commentId/reply', ReplyController.findRepliesByComment) // 回复
+  .get('/comment/:commentId/:replyId/reply', ReplyController.findRepliesByComment_r)
+  .post('/reply', ReplyController.addReply) 
+  .delete('/reply/:id', ReplyController.deleteReply)
   
   .get('author', AuthorController.findAuthor) // 作者
   .post('/author', AuthorController.createAuthor)

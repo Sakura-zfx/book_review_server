@@ -7,20 +7,43 @@ class ReplyModel {
    * 获取某条评论下的所有回复,replyType为comment
    */
   static async findRepliesByComment(commentId) {
-    const replies = await Reply.findAndCountAll({
+    const replies = await Reply.findAll({
       where: {
         commentId: commentId,
         replyType: 'comment'
       }
     })
+
     return replies
   }
 
+  // 获取评论下的回复数量
+  static async getReplyCount_Com(commentId) {
+    const count = await Reply.count({
+      where: {
+        commentId: commentId,
+        replyType: 'comment'
+      }
+    })
+  }
+
+  // 获取回复下的回复数量
+  static async getReplyCount_Rep(commentId, replyId) {
+    const count = await Reply.count({
+      where: {
+        commentId: commentId,
+        replyId: replyId,
+        replyType: 'reply'
+      }
+    })
+
+    return count
+  }
   /**
    * 获取某条评论下回复的回复
    */
   static async findRepliesByReply(commentId, replyId) {
-    const replies = await Reply.findAndCountAll({
+    const replies = await Reply.findAll({
       where: {
         commentId: commentId,
         replyId: replyId,
@@ -29,25 +52,39 @@ class ReplyModel {
     })
     return replies
   }
+
+  // 获取用户的回复
+  static async findUserReplies(userId) {
+    const replies = await Reply.findAndCountAll({
+      where: {
+        fromUid: userId
+      }
+    })
+
+    return replies
+  }
+
   /**
    * 新增回复
    */
   static async addReply(reply) {
-    await Reply.create({
+    const res = await Reply.create({
       ...reply
     })
-    return true
+    return res
   }
 
   /**
    * 删除回复
    */
   static async deleteReply(id) {
-    await Reply.destroy({
+    const res = await Reply.destroy({
       where: {
         id: id
       }
     })
+
+    return res
   }
 }
 

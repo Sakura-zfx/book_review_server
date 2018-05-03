@@ -53,22 +53,41 @@ class CommentController {
         order
       })
     }
-    ctx.body = {
+    // 获取评论下的回复数量
+    if (commentsData) {
+      commentsData.rows.forEach(item => {
+        const commentId = item.id
+        const count_reply = await ReplyModel.getReplyCount_Com(commentId)
+
+        item.replyCount = count_reply
+      })
+    }  
+    
+    commentsData !== false ? ctx.body = {
       ...FIND_SUCCESS,
-      data: {
-        count: commentsData.count,
-        comments: commentsData.rows
-      }
+      count: commentsData.count,      
+      data: commentsData.rows
+    } : ctx.body = {
+      ...FIND_WRONG  
     }
   }
 
+  // 获取用户的评论与回复
   static async getUserComments(ctx) {
     const userId = ctx.params.userId
 
-    const data = await CommentModel.findCommentsByUserId(userId)
+    const c_data = await CommentModel.findCommentsByUserId(userId)
 
-    data ? ctx.body = {
+    const r_data = await ReplyModel.findUserReplies(userId)
+
+    const data = {
+      cData: c_data.rows,
+      rData: r_data.rows
+    }
+
+    data !== false ? ctx.body = {
       ...FIND_SUCCESS,
+      count: c_data.count + r_data.count,
       data: data
     } : ctx.body = {
       ...FIND_WRONG  
@@ -82,16 +101,23 @@ class CommentController {
       content,
       score,      
       bookId,
-      fromUid
+      fromUid,
+      publishTime
     } = {
       ...ctx.request.body  
       }
     
-    const comment = ctx.request.body
+    const data = await CommentModel.createComment({
+      topicId,
+      topicType,
+      content,
+      score,      
+      bookId,
+      fromUid,
+      publishTime
+    })
 
-    const data = await CommentModel.createComment(comment)
-
-    data ? ctx.body = {
+    data !== false ? ctx.body = {
       ...ADD_SUCCESS
     } : ctx.body = {
       ...ADD_WRONG  
@@ -103,7 +129,7 @@ class CommentController {
 
     const data = await CommentModel.deleteComment(commentId)
     
-    data ? ctx.body = {
+    data !== false ? ctx.body = {
       ...DEL_SUCCESS
     } : ctx.body = {
       ...DEL_WRONG
