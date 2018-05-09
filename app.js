@@ -2,7 +2,7 @@
  * @Author: sakura.zhang
  * @Date: 2018-03-19 19:42:12
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-05-10 00:49:22
+ * @Last Modified time: 2018-05-10 02:39:35
  */
 import Koa from 'koa'
 import session from 'koa-session'
@@ -23,7 +23,7 @@ const app = new Koa();
 const storage = multer.diskStorage({  
   //文件保存路径  
   destination: function (req, file, cb) {  
-    cb(null, 'app/uploads/')  
+    cb(null, 'public/uploads/')  
   },  
   //修改文件名称  
   filename: function (req, file, cb) {
@@ -74,7 +74,7 @@ app.use(errorHandle)
 app.use(jwt({
   secret,
 }).unless({
-  path: [/\/api\/register/, /\/api\/login/, /\/api\/user\/create/],
+  path: [/\/api\/register/, /\/api\/login/, /\/api\/user\/create/, /\/uploads/],
 }))
 
 
@@ -82,7 +82,7 @@ app.use(router.routes())
 app.use(router.allowedMethods())
 
 app.use(historyApiFallback())
-app.use(staticResource(path.resolve('dist')))
+app.use(staticResource(__dirname + '/public'))
 
 app.listen(3000)
 console.log('listen to 3000...')

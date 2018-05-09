@@ -91,26 +91,12 @@ class UserController {
         user.nickName = user.nickName ? user.nickName : `user_${user.identity}`
 
         await UserModel.createUser(user)
-        // 签发token
-        const loginAuth = await UserModel.getAuth({
-          identity: user.identity,
-          userRole: user.userRole
-        })
+
         const newUser = await UserModel.findUserById(loginAuth.userId)
-        const userToken = {
-          userId: newUser.userId,
-          userName: newUser.nickName
-        }
-        const token = jwt.sign(userToken, secret, {
-          expiresIn: '3h'
-        })
 
         ctx.body = {
           code: 200,
           msg: '创建成功',
-          bean: {
-            token
-          }
         }
       }
     } else {
