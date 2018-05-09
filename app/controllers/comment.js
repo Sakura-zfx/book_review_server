@@ -19,7 +19,7 @@ class CommentController {
     let limit = ctx.query.limit
 
     order = order ? 'ASC' : 'DESC'
-    pageId = pageId ? 1 : pageId
+    pageId = pageId ? pageId : 1
     limit = limit > 20 ? 20 : limit
     
     let commentsData = []
@@ -54,13 +54,13 @@ class CommentController {
       })
     }
     // 获取评论下的回复数量
-    if (commentsData) {
-      commentsData.rows.forEach(async (item) => {
-        const commentId = item.id
+    if (commentsData.rows) {
+      for (let i in commentsData.rows) {
+        const commentId = commentsData.rows[i].id
         const count_reply = await ReplyModel.getReplyCount_Com(commentId)
 
-        item.replyCount = count_reply
-      })
+        commentsData.rows[i].setDataValue('replyCount', count_reply)
+      }
     }  
     
     commentsData !== false ? ctx.body = {

@@ -1,13 +1,17 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt-nodejs'
-import {secret} from '../../config/secret'
+import {
+  secret
+} from '../../config/secret'
 import UserModel from '../models/user';
 import {
   PASSWORD_WRONG,
   USER_NOT_EXIST,
   USER_PERMISSION_ERROR,
   USER_HAS_BEEN_BANNED,
-  USER_HAS_EXIST
+  USER_HAS_EXIST,
+  FIND_SUCCESS,
+  FIND_WRONG
 } from '../../utils/constants'
 
 class UserController {
@@ -24,8 +28,10 @@ class UserController {
           userId: user.userId,
           userName: user.nickName
         }
-        const token = jwt.sign(userToken, secret, { expiresIn: '3h' })
-        
+        const token = jwt.sign(userToken, secret, {
+          expiresIn: '3h'
+        })
+
         ctx.body = {
           code: 200,
           msg: '登录成功',
@@ -48,7 +54,9 @@ class UserController {
       userId: user.userId,
       userName: user.nickName
     }
-    const token = jwt.sign(userToken, secret, { expiresIn: '3h' })
+    const token = jwt.sign(userToken, secret, {
+      expiresIn: '3h'
+    })
 
     ctx.body = {
       bean: {
@@ -93,7 +101,9 @@ class UserController {
           userId: newUser.userId,
           userName: newUser.nickName
         }
-        const token = jwt.sign(userToken, secret, { expiresIn: '3h' })
+        const token = jwt.sign(userToken, secret, {
+          expiresIn: '3h'
+        })
 
         ctx.body = {
           code: 200,
@@ -145,6 +155,57 @@ class UserController {
       code: 200,
       msg: 'success',
       data: userInfo
+    }
+  }
+
+  // 获取用户列表
+  static async getUserList(ctx) {
+    let {
+      userRole,
+      pageId,
+      limit
+    } = {
+      ...ctx.query
+      }
+    pageId = pageId ? pageId : 1
+    limit = limit > 20 ? 20 : limit
+    const userList = await UserModel.getUserList(+userRole, +pageId, +limit)
+
+    userList !== false ? ctx.body = {
+      ...FIND_SUCCESS,
+      count: userList.count,
+      data: userList.rows
+    } : ctx.body = {
+      ...FIND_WRONG  
+    }
+  }
+
+  // ban
+  static async getBanlist(ctx) {
+    const status = ctx.query.status
+    let pageId = ctx.query.pageId ? ctx.query.pageId : 1
+    let limit = ctx.query.limit > 20 ? 20 : ctx.query.limit
+    const data = await UserModel.getBanlist(+status, +pageId, +limit)
+
+    data !== false ? ctx.body = {
+      ...FIND_SUCCESS,
+      count: data.count,
+      data: data.rows
+    } : ctx.body = {
+      ...FIND_WRONG  
+    }
+  }
+  // search
+  static async searchUser(ctx) {
+    const searchMsg = ctx.query.search
+
+    const data = await UserModel.searchUser(searchMsg)
+
+    data !== false ? ctx.body = {
+      ...FIND_SUCCESS,
+      data: data
+    } : ctx.body = {
+      ...FIND_WRONG  
     }
   }
 }

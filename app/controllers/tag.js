@@ -20,10 +20,10 @@ class TagController {
     const data = await TagModel.findTagsByBook(bookId)
 
     if (data) {
-      data.forEach(async (item) => {
-        const name = await TagModel.getTagName(item.tagId)
-        item.tagName = name
-      })
+      for (let i in data) {
+        const name = await TagModel.getTagName(data[i].tagId)
+        data[i].setDataValue('tagName', name)
+      }
     }
 
     data !== false ? ctx.body = {
@@ -43,11 +43,11 @@ class TagController {
 
     // 获取每个tag下的书籍数量
     if (data) {
-      data.forEach(async (item) => {
-        const count = await TagModel.getBookCount(tagId)
+      for (let i in data) {
+        const count = await TagModel.getBookCount(data[i].tagId)
 
-        item.count = count
-      })
+        data[i].setDataValue('count', count)
+      }
     }
 
     data !== false ? ctx.body = {

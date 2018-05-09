@@ -41,6 +41,10 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.INTEGER(2),
 			allowNull: true,
 			defaultValue: '0'
+		},
+		loginTime: {
+			type: DataTypes.DATE,
+			allowNull: true
 		}
 	}, {
 		tableName: 'user_auths'

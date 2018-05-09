@@ -18,11 +18,11 @@ class ReplyController {
 
     // 获取每条回复下的回复数量
     if (replies) {
-      replies.forEach(async (item) => {
-        const count = await ReplyModel.getReplyCount_Rep(commentId, item.id)
+      for (let i in replies) {
+        const count = await ReplyModel.getReplyCount_Rep(commentId, replies[i].id)
 
-        item.replyCount = count
-      })
+        replies[i].setDataValue('replyCount', count)
+      }
     }
 
     replies !== false ? ctx.body = {
@@ -42,11 +42,11 @@ class ReplyController {
 
     // 获取回复下的回复数量
     if (data) {
-      data.forEach(async (item) => {
-        const count = await ReplyModel.getReplyCount_Rep(commentId, item.id)
+      for (let i in data) {
+        const count = await ReplyModel.getReplyCount_Rep(commentId, data[i].id)
 
-        item.replyCount = count
-      })
+        data[i].setDataValue('replyCount', count)
+      }
     }
 
     data !== false ? ctx.body = {

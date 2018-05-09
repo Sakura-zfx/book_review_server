@@ -2,7 +2,7 @@
  * @Author: sakura.zhang
  * @Date: 2018-03-12 00:14:59
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-05-04 03:21:35
+ * @Last Modified time: 2018-05-08 17:08:30
  */
 import Router from 'koa-router'
 import AuthorController from '../controllers/author'
@@ -23,6 +23,9 @@ router
   .get('/logout/:userId', UserController.getLogout)
   .post('/register', UserController.createUser)
 
+  .get('/user/list', UserController.getUserList)
+  .get('/user/search', UserController.searchUser)
+  .get('/user/banlist', UserController.getBanlist)
   .get('/user/:userId', UserController.findUserById) // 用户
   .post('/user/create', UserController.createUser)
   .put('/user', UserController.modifyUser)

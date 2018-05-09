@@ -29,32 +29,32 @@ class BookModel {
 
     // 通过bookId 查询书籍信息
     if (books) {
-      books.forEach(async (item) => {
+      for (let i in books) {
         const book_msg = await Book.findOne({
           where: {
-            bookId: item.bookId
+            bookId: books[i].bookId
           }
         })
 
         const SUM = await Comment.sum('score', {
           where: {
-            bookId: item.bookId
+            bookId: books[i].bookId
           } 
         })
 
         const COUNT = await Comment.count({
           where: {
-            bookId: item.bookId
+            bookId: books[i].bookId
           }
         })
         
         const AVG = (SUM / COUNT).toFixed(2)
 
-        item = {
+        books[i] = {
           avgScore: AVG,
           ...book_msg
         }
-      })
+      }
     }
 
     return books

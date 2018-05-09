@@ -2,7 +2,7 @@
  * @Author: sakura.zhang
  * @Date: 2018-03-19 19:42:12
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-05-04 03:06:55
+ * @Last Modified time: 2018-05-10 00:49:22
  */
 import Koa from 'koa'
 import session from 'koa-session'
@@ -14,11 +14,31 @@ import jwt from 'koa-jwt'
 import {secret} from './config/secret'
 import errorHandle from './app/middlewares/errorHandle'
 import router from './app/api/index'
+import multer from 'koa-multer'
 import path from 'path'
 import staticResource from 'koa-static'
 import historyApiFallback from 'koa-history-api-fallback'
 
 const app = new Koa();
+const storage = multer.diskStorage({  
+  //文件保存路径  
+  destination: function (req, file, cb) {  
+    cb(null, 'app/uploads/')  
+  },  
+  //修改文件名称  
+  filename: function (req, file, cb) {
+    var fileFormat = (file.originalname).split(".");  
+    cb(null,Date.now() + "." + fileFormat[fileFormat.length - 1]);  
+  }  
+})  
+//加载配置  
+const upload = multer({ storage: storage });
+router.post('/upload', upload.single('file'), async (ctx, next) => {  
+  ctx.body = {  
+    filename: ctx.req.file.filename//返回文件名
+  }
+})
+
 const client = redis.createClient(6379, '127.0.0.1')
 const options = {
   client,

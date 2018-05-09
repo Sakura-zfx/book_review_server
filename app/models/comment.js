@@ -30,8 +30,8 @@ class CommentModel {
 
     const comments = await Comment.findAndCountAll({
       where: where,
-      offset: pageId * limit,
-      limit: limit,
+      offset: (pageId - 1) * limit,
+      limit: +limit,
       order: [['publishTime', order]],
     })
     return comments
