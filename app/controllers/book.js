@@ -64,14 +64,14 @@ class BookController {
    * 查询书籍数组
    */
   static async findBooks(ctx) {
-    const bookName = ctx.query.bookName
-    const author = ctx.query.author
+    let {searchMsg, pageId, limit} = {...ctx.query}
+
+    pageId = pageId ? +pageId : 1
+    limit = limit ? limit > 30 ? 30 : +limit : 10
 
     let books = null
-    if (bookName) {
-      books = await BookModel.findBookByName(bookName)
-    } else if (author) {
-      books = await BookModel.findBooksByAuthor(author)
+    if (searchMsg) {
+      books = await BookModel.findBookBySearch(searchMsg, pageId, limit)
     } else {
       ctx.body = {
         code: -90006,
@@ -81,7 +81,8 @@ class BookController {
 
     books !== false ? ctx.body = {
       ...FIND_SUCCESS,
-      data: books
+      count: books.count,
+      data: books.rows
     } : ctx.body = {
       ...FIND_WRONG  
     }

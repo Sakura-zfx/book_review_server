@@ -77,6 +77,8 @@ class UserModel {
     userInfo.setDataValue('userRole', authInfo[0].userRole)
     userInfo.setDataValue('status', authInfo[0].status)
     userInfo.setDataValue('lastLoginTime', authInfo[0].loginTime)
+    userInfo.setDataValue('email', '')
+    userInfo.setDataValue('phone', '')    
 
     authInfo.map(item => {
       if (item.identityType === 'email') {
@@ -95,7 +97,8 @@ class UserModel {
    */
   static async createUser(user) {
     await User.create({
-      nickName: user.nickName
+      nickName: user.nickName,
+      registerDate: new Date()
     }).then(async () => {
       const newUser = await User.findOne({
         where: {
@@ -186,7 +189,14 @@ class UserModel {
     }
     return userList
   }
-
+  static async verifyUser(identity) {
+    const user = await Auth.findOne({
+      where: {
+        identity: identity
+      }
+    })
+    return user
+  }
   // 搜索用户列表
   static async searchUser(searchMsg) {
     const Op = sequelize.Op
@@ -201,7 +211,7 @@ class UserModel {
     const userList2 = await User.findAll({
       where: {
         nickName: {
-          [Op.like]: `%${searchMsg}%`          
+          [Op.like]: `%${searchMsg}%`
         }
       },
       attributes: [[sequelize.literal('distinct `userId`'), 'userId']]

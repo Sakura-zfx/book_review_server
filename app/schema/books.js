@@ -8,10 +8,22 @@ module.exports = function(sequelize, DataTypes) {
 			primaryKey: true,
 			autoIncrement: true
 		},
+		isbn10: {
+			type: DataTypes.STRING(10),
+			allowNull: true
+		},
+		isbn13: {
+			type: DataTypes.STRING(13),
+			allowNull: true
+		},
 		bookName: {
 			type: DataTypes.STRING(255),
 			allowNull: false,
 			defaultValue: ''
+		},
+		originName: {
+			type: DataTypes.STRING(255),
+			allowNull: true
 		},
 		bookPic: {
 			type: DataTypes.STRING(255),
@@ -29,7 +41,7 @@ module.exports = function(sequelize, DataTypes) {
 			defaultValue: ''
 		},
 		publishDate: {
-			type: DataTypes.DATEONLY,
+			type: "YEAR(4)",
 			allowNull: true
 		},
 		pageNumber: {
@@ -41,6 +53,18 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.DECIMAL,
 			allowNull: true,
 			defaultValue: '0.00'
+		},
+		altName: {
+			type: DataTypes.STRING(255),
+			allowNull: true
+		},
+		subName: {
+			type: DataTypes.STRING(255),
+			allowNull: true
+		},
+		binding: {
+			type: DataTypes.STRING(255),
+			allowNull: true
 		}
 	}, {
 		tableName: 'books'

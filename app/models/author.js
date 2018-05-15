@@ -55,7 +55,7 @@ class AuthorModel {
     const authors = await Author.findAndCountAll({
       where: {
         authorName: {
-          [Op.like]: authorName       
+          [Op.like]: `%${authorName}%`       
         }
       }
     })

@@ -29,7 +29,14 @@ class UserController {
           userName: user.nickName
         }
         const token = jwt.sign(userToken, secret, {
-          expiresIn: '3h'
+          expiresIn: '7d'
+        })
+
+        // 刷新登录时间
+        await UserModel.modifyAuth({
+          loginTime: new Date()
+        }, {
+          userId: +user.userId
         })
 
         ctx.body = {
@@ -55,7 +62,7 @@ class UserController {
       userName: user.nickName
     }
     const token = jwt.sign(userToken, secret, {
-      expiresIn: '3h'
+      expiresIn: '7d'
     })
 
     ctx.body = {
@@ -92,8 +99,6 @@ class UserController {
 
         await UserModel.createUser(user)
 
-        const newUser = await UserModel.findUserById(loginAuth.userId)
-
         ctx.body = {
           code: 200,
           msg: '创建成功',
@@ -122,8 +127,47 @@ class UserController {
    * 修改用户信息
    */
   static async modifyUser(ctx) {
-    const user = ctx.request.body
-    await UserModel.modifyUser(user)
+    const {
+      userId,
+      nickName,
+      pictrue,
+      userGender,
+      trueName,
+      birth,
+      address,
+      userRole,
+      status,
+      email,
+      phone
+    } = { ...ctx.request.body
+    }
+    await UserModel.modifyUser({
+      userId,
+      nickName,
+      pictrue,
+      userGender,
+      trueName,
+      birth: birth ? birth : null,
+      address,
+    })
+    await UserModel.modifyAuth({ 
+      status: +status,
+      userRole: +userRole === 2 ? 2 : 1
+     }, {
+      userId: +userId
+    })
+    email && await UserModel.modifyAuth({
+      identity: email
+    }, {
+        userId: +userId,
+        identityType: 'email',        
+      })
+    phone && await UserModel.modifyAuth({
+      identity: phone
+    }, {
+        userId: +userId,
+      identityType: 'phone'  
+    })
     ctx.body = {
       code: 200,
       msg: '修改成功'
@@ -152,9 +196,9 @@ class UserController {
       limit
     } = {
       ...ctx.query
-      }
+    }
     pageId = pageId ? pageId : 1
-    limit = limit > 20 ? 20 : limit
+    limit = limit > 30 ? 30 : limit
     const userList = await UserModel.getUserList(+userRole, +pageId, +limit)
 
     userList !== false ? ctx.body = {
@@ -162,7 +206,7 @@ class UserController {
       count: userList.count,
       data: userList.rows
     } : ctx.body = {
-      ...FIND_WRONG  
+      ...FIND_WRONG
     }
   }
 
@@ -178,7 +222,19 @@ class UserController {
       count: data.count,
       data: data.rows
     } : ctx.body = {
-      ...FIND_WRONG  
+      ...FIND_WRONG
+    }
+  }
+  static async verifyUser(ctx) {
+    const identity = ctx.query.identity
+
+    const data = await UserModel.verifyUser(identity)
+
+    data ? ctx.body = {
+      ...USER_HAS_EXIST
+    } : ctx.body = {
+        code: 200,
+        msg: '可以新增'  
     }
   }
   // search
@@ -191,7 +247,7 @@ class UserController {
       ...FIND_SUCCESS,
       data: data
     } : ctx.body = {
-      ...FIND_WRONG  
+      ...FIND_WRONG
     }
   }
 }

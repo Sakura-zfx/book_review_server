@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "babel-node app.js",
-    "auto": "babel-node ./utils/sequelize_auto.js"
+    "auto": "babel-node ./utils/sequelize_auto.js",
+    "py": "babel-node ./app/controllers/recommendation/recommendation.js"
   },
   "author": "sakura.zhang\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[S",
   "license": "ISC",

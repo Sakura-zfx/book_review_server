@@ -39,7 +39,7 @@ class BookModel {
         const SUM = await Comment.sum('score', {
           where: {
             bookId: books[i].bookId
-          } 
+          }
         })
 
         const COUNT = await Comment.count({
@@ -47,7 +47,7 @@ class BookModel {
             bookId: books[i].bookId
           }
         })
-        
+
         const AVG = (SUM / COUNT).toFixed(2)
 
         books[i] = {
@@ -59,27 +59,24 @@ class BookModel {
 
     return books
   }
-  // 通过书籍名查找书籍数组
-  static async findBookByName(bookName) {
-    const Op = sequelize.Op    
-    const books = await Book.findAll({
-      where: {
-        bookName: {
-          [Op.like]: bookName
-        }
-      }
-    })
-    return books
-  }
-  // 通过作者查找书籍数组
-  static async findBooksByAuthor(author) {
+  // 搜索书籍数组
+  static async findBookBySearch(searchMsg, pageId, limit) {
     const Op = sequelize.Op
-    const books = await Book.findAll({
+    const books = await Book.findAndCountAll({
       where: {
-        author: {
-          [Op.like]: author
-        }
-      }
+        [Op.or]: [{
+          bookName: {
+            [Op.like]: `%${searchMsg}%`
+          }
+        }, {
+          author: {
+            [Op.like]: `%${searchMsg}%`
+          }
+        }]
+      },
+      attributes: ['bookId', 'bookName', 'publishDate', 'author'],
+      offset: (pageId - 1) * limit,
+      limit: limit,
     })
     return books
   }
@@ -97,7 +94,7 @@ class BookModel {
       pageNumber,
       price,
     } = {
-      ...book  
+      ...book
     }
     const res = await Book.create({
       bookName,
@@ -118,11 +115,11 @@ class BookModel {
     const res = await Book.update({
       ...book
     }, {
-        where: {
+      where: {
         bookId: book.bookId
-      }  
-      })
-    
+      }
+    })
+
     return res
   }
   /**
