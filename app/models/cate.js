@@ -4,18 +4,18 @@ const Cate = sequelize.import('../schema/cates.js')
 
 class CateModel {
   /**
-   * 
+   * add
    * @param {*} cate 
    */
   static async createCate(cate) {
     const res = await Cate.create({
-      cateName: cate.cateName
+     ...cate
     })
     return res
   }
 
   /**
-   * 
+   * del
    * @param {*} cateId 
    */
   static async deleteCate(cateId) {
@@ -28,12 +28,12 @@ class CateModel {
   }
 
   /**
-   * 
+   * mod
    * @param {*} cate 
    */
   static async modifyCate(cate) {
     const res = await Cate.update({
-      cateName: cate.cateName
+      ...cate
     }, {
       where: {
         id: cate.cateId

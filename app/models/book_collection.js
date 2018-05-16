@@ -3,59 +3,45 @@ import sequelize from '../../config/connect'
 const Collection = sequelize.import('../schema/book_collection.js')
 
 class CollectionModel {
-  static async getCollectionByUser(userId) {
-    const data = await Collection.findAndCountAll()({
+  // 获取用户收藏的书籍
+  static async getCollectionByUser(userId, pageId, limit) {
+    const collection = await Collection.findAndCountAll({
       where: {
         userId
-      }
+      },
+      offset: (pageId - 1) * limit,
+      limit: limit
     })
 
-    return data
+    return collection
   }
-
+  // 获取书籍被收藏数
   static async getCountByBook(bookId) {
     const count = await Collection.count({
       where: {
         bookId
-      }
+      },
+
     })
 
     return count
   }
 
   // 获取用户对当前书籍的收藏状态
-  static async getStatus(search) {
-    const {
-      bookId,
-      userId
-    } = {
-      ...search
-    }
-
-    const data = await Collection.findOne({
+  static async getStatus(bookId, userId) {
+    const status = await Collection.findOne({
       where: {
         bookId,
         userId
-      }
+      },
     })
 
-    return data
+    return status
   }
 
   static async addCollection(collection) {
-    const {
-      bookId,
-      userId,
-      status,
-      collectionTime
-    } = {
-      ...collection
-    }
     const res = await Collection.create({
-      bookId,
-      userId,
-      status,
-      collectionTime
+      ...collection
     })
 
     return res
@@ -63,7 +49,8 @@ class CollectionModel {
 
   static async modifyCollectionStatus(id, status) {
     const res = Collection.update({
-      status
+      status,
+      collectionTime: new Date()
     }, {
       where: {
         id

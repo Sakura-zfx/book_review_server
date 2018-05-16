@@ -35,11 +35,6 @@ module.exports = function(sequelize, DataTypes) {
 		authorIntro: {
 			type: DataTypes.TEXT,
 			allowNull: true
-		},
-		authorWorks: {
-			type: DataTypes.STRING(255),
-			allowNull: true,
-			defaultValue: ''
 		}
 	}, {
 		tableName: 'authors'

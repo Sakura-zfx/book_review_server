@@ -33,13 +33,22 @@ class AuthorModel {
       where: {
         authorId: author.authorId
       }
-      })
-    
+    })
+
     return res
   }
   /**
    * search
    */
+  static async getAuthorList(pageId, limit) {
+    const authors = await Author.findAndCountAll({
+      offset: (pageId - 1) * limit,
+      limit: limit
+    })
+
+    return authors
+  }
+
   static async findAuthorById(authorId) {
     const author = await Author.findOne({
       where: {
@@ -50,14 +59,16 @@ class AuthorModel {
     return author
   }
 
-  static async findAuthorByName(authorName) {
+  static async findAuthorByName(authorName, pageId, limit) {
     const Op = sequelize.Op
     const authors = await Author.findAndCountAll({
       where: {
         authorName: {
-          [Op.like]: `%${authorName}%`       
+          [Op.like]: `%${authorName}%`
         }
-      }
+      },
+      offset: (pageId - 1) * limit,
+      limit: limit
     })
 
     return authors

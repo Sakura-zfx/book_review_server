@@ -40,11 +40,13 @@ class CommentModel {
    * 通过用户获取评论
    * @param {*} userId 
    */
-  static async findCommentsByUserId(userId) {
+  static async findCommentsByUserId(userId, pageId, limit) {
     const comments = await Comment.findAndCountAll({
       where: {
         fromUid: userId
-      }
+      },
+      offset: (pageId - 1) * limit,
+      limit: limit
     })
     return comments
   }
@@ -53,25 +55,8 @@ class CommentModel {
    * 增加评论
    */
   static async createComment(comment) {
-    const {
-      topicId,
-      topicType,
-      content,
-      score,
-      bookId,
-      fromUid,
-      publishTime
-    } = {
-      ...comment  
-    }
     const res = await Comment.create({
-      topicId,
-      topicType,
-      content,
-      bookId,
-      score,      
-      fromUid,
-      publishTime
+      ...comment
     })
     return res
   }

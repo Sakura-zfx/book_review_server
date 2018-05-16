@@ -1,11 +1,10 @@
 import sequelize from '../../config/connect'
 
 const Tag = sequelize.import('../schema/tags.js')
-const Book_Tag = sequelize.import('../schema/book_tag.js')
 
 class TagModel {
   /**
-   * 
+   * add
    * @param {*} tag 
    */
   static async createTag(tag) {
@@ -17,7 +16,7 @@ class TagModel {
   }
 
   /**
-   * 
+   * del
    * @param {*} tagId 
    */
   static async deleteTag(tagId) {
@@ -30,7 +29,7 @@ class TagModel {
   }
 
   /**
-   * 
+   * mod
    * @param {*} tag 
    */
   static async modifyTag(tag) {
@@ -59,7 +58,7 @@ class TagModel {
   }
   // 查询标签名字
   static async getTagName(tagId) {
-    const name = await Tag.findAll({
+    const name = await Tag.findOne({
       where: {
         id: tagId
       }
@@ -78,28 +77,6 @@ class TagModel {
       }
     })
     return tags
-  }
-
-  // 获取书籍下的tags
-  static async findTagsByBook(bookId) {
-    const tags = await Book_Tag.findAll({
-      where: {
-        bookId: bookId
-      },
-      attributes: ['tagId']
-    })
-    return tags
-  }
-
-  // 获取tag下的书籍数量
-  static async getBookCount(tagId) {
-    const count = await Book_Tag.count({
-      where: {
-        tagId: tagId
-      }
-    })
-
-    return count
   }
 }
 

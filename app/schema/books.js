@@ -30,11 +30,6 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: true,
 			defaultValue: ''
 		},
-		author: {
-			type: DataTypes.STRING(255),
-			allowNull: true,
-			defaultValue: ''
-		},
 		publishHouse: {
 			type: DataTypes.STRING(255),
 			allowNull: true,
