@@ -14,12 +14,12 @@ class ReplyController {
     const commentId = ctx.params.commentId
 
     // 首先找出该条评论下的回复
-    const replies = ReplyModel.findRepliesByComment(commentId)
+    const replies = await ReplyModel.findRepliesByComment(+commentId)
 
     // 获取每条回复下的回复数量
     if (replies) {
       for (let i in replies) {
-        const count = await ReplyModel.getReplyCount_Rep(commentId, replies[i].id)
+        const count = await ReplyModel.getReplyCount_Rep(+commentId, +replies[i].id)
 
         replies[i].setDataValue('replyCount', count)
       }
@@ -35,8 +35,8 @@ class ReplyController {
 
   // 获取某条评论下回复的回复
   static async findRepliesByComment_r(ctx) {
-    const commentId = ctx.params.commentId
-    const replyId = ctx.params.replyId
+    const commentId = +ctx.params.commentId
+    const replyId = +ctx.params.replyId
 
     const data = await ReplyModel.findRepliesByReply(commentId, replyId)
 
@@ -64,7 +64,7 @@ class ReplyController {
       replyId,
       replyType,
       content,
-      fromUd,
+      fromUid,
       toUid,
       publishTime
     } = {
@@ -76,9 +76,9 @@ class ReplyController {
       replyId,
       replyType,
       content,
-      fromUd,
+      fromUid,
       toUid,
-      publishTime
+      publishTime: new Date()
     })
 
     data !== false ? ctx.body = {

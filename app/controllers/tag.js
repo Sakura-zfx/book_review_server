@@ -1,5 +1,15 @@
 import TagModel from '../models/tag'
-import { FIND_WRONG, FIND_SUCCESS, ADD_SUCCESS, ADD_WRONG, DEL_SUCCESS, DEL_WRONG, MOD_SUCCESS, MOD_WRONG } from '../../utils/constants';
+import BookTagModel from '../models/book_tag'
+import {
+  FIND_WRONG,
+  FIND_SUCCESS,
+  ADD_SUCCESS,
+  ADD_WRONG,
+  DEL_SUCCESS,
+  DEL_WRONG,
+  MOD_SUCCESS,
+  MOD_WRONG
+} from '../../utils/constants';
 
 class TagController {
   // 获取所有的tags
@@ -10,28 +20,29 @@ class TagController {
       ...FIND_SUCCESS,
       data: data
     } : ctx.body = {
-      ...FIND_WRONG  
+      ...FIND_WRONG
     }
   }
 
   // 获取书籍下的tags
   static async getBookTags(ctx) {
     const bookId = ctx.params.bookId
-    const data = await TagModel.findTagsByBook(bookId)
+    const data = await BookTagModel.getTagsByBook(+bookId)
 
-    if (data) {
-      for (let i in data) {
-        const name = await TagModel.getTagName(data[i].tagId)
-        data[i].setDataValue('tagName', name)
+    if (data.rows) {
+      for (let i in data.rows) {
+        const name = await TagModel.getTagName(+data.rows[i].tagId)
+        data.rows[i].setDataValue('tagName', name.tagName)
       }
     }
 
     data !== false ? ctx.body = {
       ...FIND_SUCCESS,
       bookId: bookId,
-      data: data
+      count: data.count,
+      data: data.rows
     } : ctx.body = {
-      ...FIND_WRONG  
+      ...FIND_WRONG
     }
   }
 
@@ -39,12 +50,12 @@ class TagController {
   static async getCateTags(ctx) {
     const cateId = ctx.params.cateId
 
-    const data = await TagModel.findTagsByCate(cateId)
+    const data = await TagModel.findTagsByCate(+cateId)
 
     // 获取每个tag下的书籍数量
     if (data) {
       for (let i in data) {
-        const count = await TagModel.getBookCount(data[i].tagId)
+        const count = await BookTagModel.getBooksCount(+data[i].id)
 
         data[i].setDataValue('count', count)
       }
@@ -54,7 +65,7 @@ class TagController {
       ...FIND_SUCCESS,
       data: data
     } : ctx.body = {
-      ...FIND_WRONG  
+      ...FIND_WRONG
     }
   }
 
@@ -64,19 +75,27 @@ class TagController {
       tagName,
       cateId
     } = {
-      ...ctx.request.body  
-      }
-    
-    const data = await TagModel.createTag({
-      tagName,
-      cateId
-    })
+      ...ctx.request.body
+    }
 
-    data !== false ? ctx.body = {
-      ...ADD_SUCCESS
-    } : ctx.body = {
-      ...ADD_WRONG  
-    } 
+    if (!(tagName && cateId)) {
+      ctx.body = {
+        code: -90006,
+        msg: '参数错误'
+      }
+    } else {
+
+      const data = await TagModel.createTag({
+        tagName,
+        cateId: +cateId
+      })
+
+      data !== false ? ctx.body = {
+        ...ADD_SUCCESS
+      } : ctx.body = {
+        ...ADD_WRONG
+      }
+    }
   }
 
   // delete
@@ -88,7 +107,7 @@ class TagController {
     data !== false ? ctx.body = {
       ...DEL_SUCCESS
     } : ctx.body = {
-      ...DEL_WRONG  
+      ...DEL_WRONG
     }
   }
 
@@ -99,9 +118,9 @@ class TagController {
       tagName,
       cateId
     } = {
-      ...ctx.request.body  
-      }
-    
+      ...ctx.request.body
+    }
+
     const data = await TagModel.modifyTag({
       tagId,
       tagName,
@@ -111,7 +130,7 @@ class TagController {
     data !== false ? ctx.body = {
       ...MOD_SUCCESS
     } : ctx.body = {
-      ...MOD_WRONG  
+      ...MOD_WRONG
     }
   }
 }

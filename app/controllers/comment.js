@@ -11,16 +11,16 @@ import {
 
 class CommentController {
   static async getBookComments(ctx) {
-    const bookId = ctx.params.bookId
+    const bookId = +ctx.params.bookId
 
-    const topicId = ctx.query.topicId
+    const topicId = +ctx.query.topicId
     let order = ctx.query.order // 排序: 1->ASC升序 0->DESC
     let pageId = ctx.query.pageId
     let limit = ctx.query.limit
 
     order = order ? 'ASC' : 'DESC'
-    pageId = pageId ? pageId : 1
-    limit = limit > 20 ? 20 : limit
+    pageId = pageId ? +pageId : 1
+    limit = limit ? limit > 20 ? 20 : +limit : 10
     
     let commentsData = []
     // 获取短评
@@ -76,9 +76,9 @@ class CommentController {
   static async getUserComments(ctx) {
     const userId = ctx.params.userId
 
-    const c_data = await CommentModel.findCommentsByUserId(userId)
+    const c_data = await CommentModel.findCommentsByUserId(+userId)
 
-    const r_data = await ReplyModel.findUserReplies(userId)
+    const r_data = await ReplyModel.findUserReplies(+userId)
 
     const data = {
       cData: c_data.rows,
@@ -99,6 +99,7 @@ class CommentController {
       topicId,
       topicType,
       content,
+      title,
       score,      
       bookId,
       fromUid,
@@ -110,6 +111,7 @@ class CommentController {
     const data = await CommentModel.createComment({
       topicId,
       topicType,
+      title,
       content,
       score,      
       bookId,
@@ -125,9 +127,9 @@ class CommentController {
   }
 
   static async deleteComment(ctx) {
-    const commentId = cxt.params.commentId
+    const commentId = ctx.params.commentId
 
-    const data = await CommentModel.deleteComment(commentId)
+    const data = await CommentModel.deleteComment(+commentId)
     
     data !== false ? ctx.body = {
       ...DEL_SUCCESS

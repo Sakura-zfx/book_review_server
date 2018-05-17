@@ -40,17 +40,61 @@ class CommentModel {
    * 通过用户获取评论
    * @param {*} userId 
    */
-  static async findCommentsByUserId(userId, pageId, limit) {
+  static async findCommentsByUserId(userId) {
     const comments = await Comment.findAndCountAll({
       where: {
         fromUid: userId
-      },
-      offset: (pageId - 1) * limit,
-      limit: limit
+      }
     })
     return comments
   }
+  // 获取书籍下的评分信息
+  static async getScoreByBook(bookId) {
+    // 2, 4, 6, 8, 10
+    const score_2 = await Comment.count({
+      where: {
+        bookId: bookId,
+        topicType: 'book',
+        score: 2
+      }
+    })
+    const score_4 = await Comment.count({
+      where: {
+        bookId: bookId,
+        topicType: 'book',        
+        score: 4
+      }
+    })
+    const score_6 = await Comment.count({
+      where: {
+        bookId: bookId,
+        topicType: 'book',        
+        score: 6
+      }
+    })
+    const score_8 = await Comment.count({
+      where: {
+        bookId: bookId,
+        topicType: 'book',        
+        score: 8
+      }
+    })
+    const score_10 = await Comment.count({
+      where: {
+        bookId: bookId,
+        topicType: 'book',        
+        score: 10
+      }
+    })
 
+    return {
+      score_2,
+      score_4,
+      score_6,
+      score_8,
+      score_10
+    }
+  }
   /**
    * 增加评论
    */

@@ -19,7 +19,6 @@ class AuthorController {
       birth,
       country,
       authorIntro,
-      authorWorks,
     } = {
       ...ctx.request.body
     }
@@ -31,7 +30,6 @@ class AuthorController {
       birth,
       country,
       authorIntro,
-      authorWorks,
     })
 
     data !== false ? ctx.body = {
@@ -62,7 +60,6 @@ class AuthorController {
       birth,
       country,
       authorIntro,
-      authorWorks,
     } = {
       ...ctx.request.body
     }
@@ -75,7 +72,6 @@ class AuthorController {
       birth,
       country,
       authorIntro,
-      authorWorks,
     })
 
     data !== false ? ctx.body = {
@@ -93,7 +89,7 @@ class AuthorController {
     if (authorId) {
       data = await AuthorModel.findAuthorById(authorId)
     } else if (authorName) {
-      data = await AuthorModel.findAuthorByName(authorName)
+      data = await AuthorModel.findAuthorByName(authorName, 1, 10)
     } else {
       ctx.body = {
         code: -90006,
@@ -106,6 +102,14 @@ class AuthorController {
       data
     } : ctx.body = {
       ...FIND_WRONG
+    }
+  }
+  static async getAuthorList(ctx) {
+    const data = await AuthorModel.getAuthorList(1, 10)
+
+    ctx.body = {
+      ...FIND_SUCCESS,
+      data: data
     }
   }
 }

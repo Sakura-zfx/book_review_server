@@ -25,6 +25,7 @@ class ReplyModel {
         replyType: 'comment'
       }
     })
+    return count
   }
 
   // 获取回复下的回复数量

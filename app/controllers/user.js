@@ -198,7 +198,7 @@ class UserController {
       ...ctx.query
     }
     pageId = pageId ? pageId : 1
-    limit = limit > 30 ? 30 : limit
+    limit = limit ? limit > 30 ? 30 : limit : 10
     const userList = await UserModel.getUserList(+userRole, +pageId, +limit)
 
     userList !== false ? ctx.body = {

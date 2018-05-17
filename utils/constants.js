@@ -2,7 +2,7 @@
  * @Author: sakura.zhang
  * @Date: 2018-04-08 23:51:59
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-05-04 03:25:39
+ * @Last Modified time: 2018-05-17 01:03:51
  */
 // 自定义成功返回信息
 export const LOGIN_SUCCESS = {
@@ -34,47 +34,47 @@ export const FIND_SUCCESS = {
  * {code: 200,msg: 'xxx'}
  */
 export const PASSWORD_WRONG = {
-  code: -1,
+  code: -1000,
   msg: '密码错误'
 }
 export const USER_NOT_EXIST = {
-  code: -1,
+  code: -1003,
   msg: '该用户不存在'
 }
 export const USER_PERMISSION_ERROR = {
-  code: -1,
+  code: -1001,
   msg: '用户权限错误'
 }
 export const USER_HAS_BEEN_BANNED = {
-  code: -1,
+  code: -1002,
   msg: '您的账号已被封禁，请联系管理员'
 }
 export const USER_HAS_EXIST = {
-  code: -1,
+  code: -1004,
   msg: '该用户已经存在'
 }
 
 export const LOGIN_WRONG = {
-  code: -111,
+  code: -1111,
   msg: '用户登录失败'
 }
 
 export const DEL_WRONG = {
-  code: -111,
+  code: -3,
   msg: '删除失败'
 }
 
 export const MOD_WRONG = {
-  code: -111,
+  code: -4,
   msg: '修改失败'
 }
 
 export const ADD_WRONG = {
-  code: -111,
+  code: -2,
   msg: '新增失败'
 }
 
 export const FIND_WRONG = {
-  code: -111,
+  code: -5,
   msg: '查询失败'
 }

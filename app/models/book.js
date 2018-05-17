@@ -15,7 +15,7 @@ class BookModel {
     return book
   }
 
-  // 搜索书籍数组 @return bookId 数组
+  // 搜索书籍数组
   static async findBookBySearch(searchMsg, pageId, limit) {
     const Op = sequelize.Op
     const books = await Book.findAndCountAll({
@@ -25,7 +25,7 @@ class BookModel {
             [Op.like]: `%${searchMsg}%`
           }
         }, {
-          author: {
+          authorList: {
             [Op.like]: `%${searchMsg}%`
           }
         }, {
@@ -34,7 +34,6 @@ class BookModel {
           isbn13: searchMsg
         }]
       },
-      attributes: ['bookId'],
       offset: (pageId - 1) * limit,
       limit: limit,
     })
@@ -48,6 +47,7 @@ class BookModel {
     const res = await Book.create({
       ...book
     })
+
     return res
   }
 

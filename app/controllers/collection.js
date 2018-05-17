@@ -13,8 +13,12 @@ import {
 class CollectionController {
   static async getCollectionsByUser(ctx) {
     const userId = ctx.params.userId
+    let { pageId, limit } = { ...ctx.query }
+    
+    pageId = pageId ? +pageId : 1
+    limit = limit ? limit > 30 ? 30 : +limit : 10
 
-    const data = await CollectionModel.getCollectionByUser(userId)
+    const data = await CollectionModel.getCollectionByUser(userId, pageId, limit)
 
     data !== false ? ctx.body = {
       ...FIND_SUCCESS,

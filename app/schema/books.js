@@ -10,11 +10,13 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		isbn10: {
 			type: DataTypes.STRING(10),
-			allowNull: true
+			allowNull: true,
+			defaultValue: ''
 		},
 		isbn13: {
 			type: DataTypes.STRING(13),
-			allowNull: true
+			allowNull: true,
+			defaultValue: ''
 		},
 		bookName: {
 			type: DataTypes.STRING(255),
@@ -23,7 +25,13 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		originName: {
 			type: DataTypes.STRING(255),
-			allowNull: true
+			allowNull: true,
+			defaultValue: ''
+		},
+		authorList: {
+			type: DataTypes.STRING(255),
+			allowNull: true,
+			defaultValue: ''
 		},
 		bookPic: {
 			type: DataTypes.STRING(255),
@@ -51,11 +59,13 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		altName: {
 			type: DataTypes.STRING(255),
-			allowNull: true
+			allowNull: true,
+			defaultValue: ''
 		},
 		subName: {
 			type: DataTypes.STRING(255),
-			allowNull: true
+			allowNull: true,
+			defaultValue: ''
 		},
 		binding: {
 			type: DataTypes.STRING(255),

@@ -42,6 +42,7 @@ class BookTagModel {
       },
       attributes: ['tagId']
     })
+    return tags
   }
   // 标签下的书籍
   static async getBooksByTag(tagId, pageId, limit) {
@@ -53,6 +54,15 @@ class BookTagModel {
       limit: limit,
       attributes: ['bookId']
     })
+  }
+  // 标签下的书籍数量
+  static async getBooksCount(tagId) {
+    const count = await BookTag.count({
+      where: {
+        tagId: tagId
+      }
+    })
+    return count
   }
 
 }

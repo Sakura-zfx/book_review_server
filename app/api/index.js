@@ -2,7 +2,7 @@
  * @Author: sakura.zhang
  * @Date: 2018-03-12 00:14:59
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-05-13 22:19:27
+ * @Last Modified time: 2018-05-17 23:45:48
  */
 import Router from 'koa-router'
 import AuthorController from '../controllers/author'
@@ -69,7 +69,7 @@ router
   .post('/reply', ReplyController.addReply) 
   .delete('/reply/:id', ReplyController.deleteReply)
   
-  .get('author', AuthorController.findAuthor) // 作者
+  .get('/author', AuthorController.findAuthor) // 作者
   .post('/author', AuthorController.createAuthor)
   .put('/author', AuthorController.modifyAuthor)
   .delete('/author/:authorId', AuthorController.deleteAuthor)
