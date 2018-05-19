@@ -150,7 +150,7 @@ class UserController {
     const {
       userId,
       nickName,
-      pictrue,
+      picture,
       userGender,
       trueName,
       birth,
@@ -164,7 +164,7 @@ class UserController {
     await UserModel.modifyUser({
       userId,
       nickName,
-      pictrue,
+      picture,
       userGender,
       trueName,
       birth: birth ? birth : null,

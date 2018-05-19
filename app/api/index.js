@@ -2,7 +2,7 @@
  * @Author: sakura.zhang
  * @Date: 2018-03-12 00:14:59
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-05-19 03:01:34
+ * @Last Modified time: 2018-05-20 01:49:02
  */
 import Router from 'koa-router'
 import AuthorController from '../controllers/author'
@@ -64,6 +64,7 @@ router
   .get('/comment/new', CommentController.getCommentsNew)
   .get('/comment', CommentController.getCUser2Book)
   .get('/user/:userId/comment', CommentController.getUserComments)
+  .get('/book/:bookId/user/:userId/comment', CommentController.getCUser2Book)
   .post('/comment', CommentController.createComment)
   .delete('/comment/:commentId', CommentController.deleteComment)
 

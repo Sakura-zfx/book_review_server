@@ -21,13 +21,17 @@ class BookController {
     const authorList = ctx.request.body.authorList
     let str = ''
 
-    for (let i in authorList) {
-      str += `${JSON.stringify(authorList[i])}/`
+    if (typeof authorList === 'object') {
+      for (let i in authorList) {
+        str += `${JSON.stringify(authorList[i])}/`
+      }
+    } else {
+      str = authorList
     }
 
     book.authorList = str
     // 增加书籍
-    const data = await BookModel.createBook(+book)
+    const data = await BookModel.createBook(book)
 
     data !== false ? ctx.body = {
       ...ADD_SUCCESS
@@ -56,14 +60,17 @@ class BookController {
     const book = ctx.request.body
     const authorList = ctx.request.body.authorList
     let str = ''
-
-    for (let i in authorList) {
-      str += `${JSON.stringify(authorList[i])}/`
+    if (typeof authorList === 'object') {
+      for (let i in authorList) {
+        str += `${JSON.stringify(authorList[i])}/`
+      }
+    } else {
+      str = authorList
     }
 
     book.authorList = str
 
-    const data = await BookModel.modifyBook(+book)
+    const data = await BookModel.modifyBook(book)
 
     data !== false ? ctx.body = {
       ...MOD_SUCCESS
@@ -88,7 +95,7 @@ class BookController {
         times += (score[i].dataValues.count)
       }
     }  
-    const avg = (total / times).toFixed(2)
+    const avg = (total === 0 || times === 0) ? '没有评分数据' : (total / times).toFixed(2)
     book.setDataValue('score', score)
     book.setDataValue('avg', avg)
     // 作者信息
@@ -96,7 +103,17 @@ class BookController {
     book.authorList = []
     for (let i in list) {
       if (list[i]) {
-        book.authorList.push(JSON.parse(list[i]))
+        try {
+          const value_json = JSON.parse(list[i])
+      
+          if (typeof value_json === 'object') {
+            temp.push(value_json)
+          } else if (typeof value_json === 'number') {
+            temp.push(value_json)
+          }
+        } catch (e) {
+          temp.push(list[i])
+        }
       }
     }
 
@@ -139,9 +156,19 @@ class BookController {
       let temp = []
       for (let j in list) {
         if (list[j]) {
-          temp.push(JSON.parse(list[j]))
+          try {
+            const value_json = JSON.parse(list[j])
+        
+            if (typeof value_json === 'object') {
+              temp.push(value_json)
+            } else if (typeof value_json === 'number') {
+              temp.push(value_json)
+            }
+          } catch (e) {
+            temp.push(list[j])
+          }
         }
-      }
+      }  
       books.rows[i].setDataValue('authorList', temp)
       
       // 获取评分信息
@@ -153,7 +180,7 @@ class BookController {
           times += (score[i].dataValues.count)
         }
       }  
-      const avg = (total / times).toFixed(2)
+      const avg = (total === 0 || times === 0) ? '没有评分数据' : (total / times).toFixed(2)
       books.rows[i].setDataValue('score', score)
       books.rows[i].setDataValue('avg', avg)
     }

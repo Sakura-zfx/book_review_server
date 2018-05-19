@@ -2,7 +2,7 @@
  * @Author: sakura.zhang
  * @Date: 2018-03-19 19:42:12
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-05-11 13:24:14
+ * @Last Modified time: 2018-05-20 02:04:32
  */
 import Koa from 'koa'
 import session from 'koa-session'
@@ -27,9 +27,9 @@ const storage = multer.diskStorage({
   },  
   //修改文件名称  
   filename: function (req, file, cb) {
-    const userId = req.url.split('?')[1].split('=')[1]
+    const mark = req.url.split('?')[1].split('=')[1]
     var fileFormat = (file.originalname).split(".");  
-    cb(null,"user"+userId + "_" + Date.now() + "." + fileFormat[fileFormat.length - 1]);  
+    cb(null,mark + "_" + Date.now() + "." + fileFormat[fileFormat.length - 1]);  
   }  
 })  
 //加载配置  
