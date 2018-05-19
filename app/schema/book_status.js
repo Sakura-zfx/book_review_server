@@ -20,6 +20,11 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING(255),
 			allowNull: true
 		},
+		score: {
+			type: DataTypes.INTEGER(2),
+			allowNull: true,
+			defaultValue: '0'
+		},
 		time: {
 			type: DataTypes.DATE,
 			allowNull: true

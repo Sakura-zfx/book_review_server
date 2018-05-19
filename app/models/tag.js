@@ -66,7 +66,11 @@ class TagModel {
 
     return name
   }
-
+  // 获取标签总素
+  static async getNumT() {
+    const num = await Tag.count()
+    return num
+  }
   /**
    * 根据类别查询标签
    */

@@ -5,6 +5,35 @@ const User = sequelize.import('../schema/users.js')
 const Auth = sequelize.import('../schema/user_auths.js')
 
 class UserModel {
+  // 获取用户注册人数等信息
+  static async getNumU() {
+    const Op = sequelize.Op
+    const date = new Date()
+    
+    const total = await User.count()
+    
+    const last_7_active = await Auth.count({
+      where: {
+        loginTime: {
+          [Op.gt]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000 )
+        }
+      }
+    })
+    
+    const last_7_re = await User.count({
+      where: {
+        registerDate: {
+          [Op.gt]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000 )          
+        }
+      }
+    })
+
+    return {
+      total,
+      last_7_active,
+      last_7_re
+    }
+  }
   // 增加登录信息  
   static async addAuth(data) {
     const res = await Auth.create({

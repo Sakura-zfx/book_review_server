@@ -2,7 +2,7 @@
  * @Author: sakura.zhang
  * @Date: 2018-04-08 23:51:59
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-05-17 01:03:51
+ * @Last Modified time: 2018-05-19 03:04:11
  */
 // 自定义成功返回信息
 export const LOGIN_SUCCESS = {
@@ -33,6 +33,11 @@ export const FIND_SUCCESS = {
  * 自定义失败返回信息
  * {code: 200,msg: 'xxx'}
  */
+export const PARAMS_WRONG = {
+  code: -90006,
+  msg: '请求参数错误'
+}
+
 export const PASSWORD_WRONG = {
   code: -1000,
   msg: '密码错误'

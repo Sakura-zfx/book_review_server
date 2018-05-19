@@ -2,7 +2,7 @@
  * @Author: sakura.zhang
  * @Date: 2018-03-12 00:14:59
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-05-17 23:45:48
+ * @Last Modified time: 2018-05-19 03:01:34
  */
 import Router from 'koa-router'
 import AuthorController from '../controllers/author'
@@ -19,6 +19,7 @@ const router = new Router({
 })
 // get=>查询 post=>新增 put=>更新 delete=>删除
 router
+  .get('/datanumber', UserController.getNum) 
   .post('/login', UserController.postLogin)
   .get('/logout/:userId', UserController.getLogout)
   .post('/register', UserController.createUser)
@@ -60,6 +61,8 @@ router
   .delete('/tag/:tagId', TagController.deleteTag)
 
   .get('/book/:bookId/comment', CommentController.getBookComments) // 评论
+  .get('/comment/new', CommentController.getCommentsNew)
+  .get('/comment', CommentController.getCUser2Book)
   .get('/user/:userId/comment', CommentController.getUserComments)
   .post('/comment', CommentController.createComment)
   .delete('/comment/:commentId', CommentController.deleteComment)

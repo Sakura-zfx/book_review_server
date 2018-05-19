@@ -14,6 +14,12 @@ class BookModel {
     })
     return book
   }
+  // 获取全部书籍
+  static async getAllBooks() {
+    const all = await Book.findAll()
+
+    return all
+  }
 
   // 搜索书籍数组
   static async findBookBySearch(searchMsg, pageId, limit) {
@@ -39,7 +45,11 @@ class BookModel {
     })
     return books
   }
-
+  // 获取书籍总数
+  static async getNumB() {
+    const num = await Book.count()
+    return num
+  }
   /**
    * 增加书籍
    */

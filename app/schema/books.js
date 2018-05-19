@@ -70,6 +70,11 @@ module.exports = function(sequelize, DataTypes) {
 		binding: {
 			type: DataTypes.STRING(255),
 			allowNull: true
+		},
+		summary: {
+			type: DataTypes.STRING(255),
+			allowNull: true,
+			defaultValue: ''
 		}
 	}, {
 		tableName: 'books'

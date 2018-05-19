@@ -1,33 +1,12 @@
 /* jshint indent: 1 */
 
 module.exports = function(sequelize, DataTypes) {
-	return sequelize.define('comments', {
+	return sequelize.define('interest', {
 		id: {
 			type: DataTypes.INTEGER(11),
 			allowNull: false,
 			primaryKey: true,
 			autoIncrement: true
-		},
-		topicId: {
-			type: DataTypes.INTEGER(11),
-			allowNull: true,
-			references: {
-				model: 'comment_type',
-				key: 'id'
-			}
-		},
-		topicType: {
-			type: DataTypes.STRING(20),
-			allowNull: true
-		},
-		title: {
-			type: DataTypes.STRING(100),
-			allowNull: true,
-			defaultValue: ''
-		},
-		content: {
-			type: DataTypes.TEXT,
-			allowNull: true
 		},
 		bookId: {
 			type: DataTypes.INTEGER(11),
@@ -37,7 +16,7 @@ module.exports = function(sequelize, DataTypes) {
 				key: 'bookId'
 			}
 		},
-		fromUid: {
+		userId: {
 			type: DataTypes.INTEGER(11),
 			allowNull: true,
 			references: {
@@ -45,11 +24,20 @@ module.exports = function(sequelize, DataTypes) {
 				key: 'userId'
 			}
 		},
-		publishTime: {
+		status: {
+			type: DataTypes.STRING(255),
+			allowNull: true
+		},
+		score: {
+			type: DataTypes.INTEGER(2),
+			allowNull: true,
+			defaultValue: '0'
+		},
+		time: {
 			type: DataTypes.DATE,
 			allowNull: true
 		}
 	}, {
-		tableName: 'comments'
+		tableName: 'interest'
 	});
 };

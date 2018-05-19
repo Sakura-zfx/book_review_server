@@ -3,6 +3,42 @@ import sequelize from '../../config/connect'
 const Comment = sequelize.import('../schema/comments.js')
 
 class CommentModel {
+  // 获取最新的书评和短评
+  static async getCommentsNew() {
+    const sql = 'select c.*, b.bookName, u.nickName from comments as c, books as b, users as u where c.topicId = :topicId and c.topicType = :topicType and c.bookId = b.bookId and c.fromUid = u.userId ORDER BY c.publishTime DESC LIMIT 10'
+
+    const short_c = await sequelize.query(sql, {
+      replacements: {
+        topicId: 1,
+        topicType: 'book'
+      },
+      type: sequelize.QueryTypes.SELECT
+    })
+
+    const book_c = await await sequelize.query(sql, {
+      replacements: {
+        topicId: 2,
+        topicType: 'book'
+      },
+      type: sequelize.QueryTypes.SELECT
+    })
+
+    return {
+      short_c,
+      book_c
+    }
+  }
+  // 获取书评总数
+  static async getNumB_c(topicId) {
+    const num = await Comment.count({
+      where: {
+        topicId: topicId,
+        topicType: 'book'
+      }
+    })
+
+    return num
+  }
   /**
    * 获取指定书籍下书评(可分页，默认第一页)
    * @param {Number} bookId 书籍id
@@ -10,7 +46,7 @@ class CommentModel {
    * @param {Number} topicId 评论类型（书评2，短评1）
    * @param {Number} pageId 页数
    * @param {Number} limit 每页的数量
-   */ 
+   */
   static async findCommentByBook(searchMsg) {
     const {
       bookId,
@@ -20,81 +56,49 @@ class CommentModel {
       limit,
       order,
     } = {
-      ...searchMsg  
-      }
+      ...searchMsg
+    }
     // 构造查询体
     const where = {}
     bookId ? where.bookId = bookId : ''
     topicType ? where.topicType = topicType : ''
-    topicId ? where.topicId = topicId : ''    
+    topicId ? where.topicId = topicId : ''
 
     const comments = await Comment.findAndCountAll({
       where: where,
       offset: (pageId - 1) * limit,
       limit: +limit,
-      order: [['publishTime', order]],
+      order: [
+        ['publishTime', order]
+      ],
     })
     return comments
   }
   /**
    * 通过用户获取评论
-   * @param {*} userId 
+   * @param {*} fromUid 
    */
-  static async findCommentsByUserId(userId) {
+  static async findCommentsByUserId(fromUid) {
     const comments = await Comment.findAndCountAll({
       where: {
-        fromUid: userId
+        fromUid: fromUid
       }
     })
     return comments
   }
-  // 获取书籍下的评分信息
-  static async getScoreByBook(bookId) {
-    // 2, 4, 6, 8, 10
-    const score_2 = await Comment.count({
+  // 获取用户对某本书籍的评论
+  static async getCUser2Book(fromUid, bookId, topicId) {
+    const comment = await Comment.findOne({
       where: {
+        fromUid: fromUid,
         bookId: bookId,
-        topicType: 'book',
-        score: 2
-      }
-    })
-    const score_4 = await Comment.count({
-      where: {
-        bookId: bookId,
-        topicType: 'book',        
-        score: 4
-      }
-    })
-    const score_6 = await Comment.count({
-      where: {
-        bookId: bookId,
-        topicType: 'book',        
-        score: 6
-      }
-    })
-    const score_8 = await Comment.count({
-      where: {
-        bookId: bookId,
-        topicType: 'book',        
-        score: 8
-      }
-    })
-    const score_10 = await Comment.count({
-      where: {
-        bookId: bookId,
-        topicType: 'book',        
-        score: 10
+        topicId: topicId
       }
     })
 
-    return {
-      score_2,
-      score_4,
-      score_6,
-      score_8,
-      score_10
-    }
+    return comment
   }
+  
   /**
    * 增加评论
    */
@@ -106,16 +110,18 @@ class CommentModel {
   }
 
   /**
-   * 修改评论(暂时不做)
+   * 修改评论,user和book,topicId确定唯一数据
    */
   static async modifyComment(comment) {
     const res = await Comment.update({
       ...comment
     }, {
-        where: {
-        id: comment.id
-      }  
-      })
+      where: {
+        bookId: comment.bookId,
+        fromUid: comment.fromUid,
+        topicId: comment.topicId
+      }
+    })
     return res
   }
   /**

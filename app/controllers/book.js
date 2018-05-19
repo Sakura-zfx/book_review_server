@@ -104,7 +104,6 @@ class BookController {
       ...FIND_WRONG
     }
   }
-
   /**
    * 查询书籍数组
    */
@@ -144,11 +143,11 @@ class BookController {
       const scoreList = await CommentModel.getScoreByBook(books.rows[i].bookId)
 
       books.rows[i].setDataValue('scoreList', scoreList)
-      const avg = ((scoreList.score_2 * 2) +
-          (scoreList.score_4 * 4) + (scoreList.score_6 * 6) +
-          (scoreList.score_8 * 8) + (scoreList.score_10 * 10)) /
-        (scoreList.score_2 + scoreList.score_4 + scoreList.score_6 + scoreList.score_8 + scoreList.score_10)
-        books.rows[i].setDataValue('avg', avg.toFixed(2))
+      // const avg = ((scoreList.score_2 * 2) +
+      //     (scoreList.score_4 * 4) + (scoreList.score_6 * 6) +
+      //     (scoreList.score_8 * 8) + (scoreList.score_10 * 10)) /
+      //   (scoreList.score_2 + scoreList.score_4 + scoreList.score_6 + scoreList.score_8 + scoreList.score_10)
+      //   books.rows[i].setDataValue('avg', avg.toFixed(2))
 
       books.rows[i].setDataValue('authorList', temp)
     }

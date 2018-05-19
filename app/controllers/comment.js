@@ -1,12 +1,16 @@
 import CommentModel from '../models/comment'
 import ReplyModel from '../models/reply'
+import InterestModel from '../models/interest'
 import { 
   DEL_SUCCESS,
   ADD_SUCCESS,
   FIND_SUCCESS,
   DEL_WRONG,
   ADD_WRONG,
-  FIND_WRONG
+  FIND_WRONG,
+  PARAMS_WRONG,
+  MOD_SUCCESS,
+  MOD_WRONG
 } from '../../utils/constants'
 
 class CommentController {
@@ -27,7 +31,7 @@ class CommentController {
     if (+topicId === 1) {
       commentsData = await CommentModel.findCommentByBook({
         bookId,
-        topicType: '',
+        topicType: 'book',
         topicId: 1,
         pageId,
         limit,
@@ -37,7 +41,7 @@ class CommentController {
       // 获取书评
       commentsData = await CommentModel.findCommentByBook({
         bookId,
-        topicType: '',
+        topicType: 'book',
         topicId: 2,
         pageId,
         limit,
@@ -46,7 +50,7 @@ class CommentController {
     } else {
       commentsData = await CommentModel.findCommentByBook({
         bookId,
-        topicType: '',
+        topicType: 'book',
         topicId: 0,
         pageId,
         limit,
@@ -57,9 +61,13 @@ class CommentController {
     if (commentsData.rows) {
       for (let i in commentsData.rows) {
         const commentId = commentsData.rows[i].id
-        const count_reply = await ReplyModel.getReplyCount_Com(commentId)
+        // interest
+        const interest = await InterestModel.getInterest(+commentsData.rows[i].fromUid, +bookId)
+      
+        const count_reply = await ReplyModel.getReplyCount_Com(+ommentId)
 
         commentsData.rows[i].setDataValue('replyCount', count_reply)
+        commentsData.rows[i].setDataValue('interest', interest)        
       }
     }  
     
@@ -71,7 +79,56 @@ class CommentController {
       ...FIND_WRONG  
     }
   }
+  // 获取用户对某本书的评论信息
+  static async getCUser2Book(ctx) {
+    const fromUid = ctx.query.fromUid
+    const bookId = ctx.query.bookId
+    const topicId = ctx.query.topicId
 
+    if (fromUid && bookId) {
+      // 获取评分
+      const interest = await InterestModel.getInterest(+fromUid, +bookId)
+
+      const comment = await CommentModel.getCUser2Book(+fromUid, +bookId, +topicId)
+      comment.setDataValue('interest', interest)
+      
+      comment !== false ? ctx.body = {
+        ...FIND_SUCCESS,
+        data: comment
+      } : ctx.body = {
+        ...FIND_WRONG  
+      }
+    } else {
+      ctx.body = {
+        ...PARAMS_WRONG
+      }
+    }
+  }
+
+  static async getCommentsNew(ctx) {
+    const data = await CommentModel.getCommentsNew()
+    const { short_c, book_c } = { ...data }
+    // interest
+    if (short_c) {
+      for (let i in short_c) {
+        const interest = await InterestModel.getInterest(+short_c[i].fromUid, +short_c[i].bookId)
+        short_c[i].setDataValue('interest', interest)
+      }
+    }
+    if (book_c) {
+      for (let i in book_c) {
+        const interest = await InterestModel.getInterest(+book_c[i].fromUid, +book_c[i].bookId)
+        book_c[i].setDataValue('interest', interest)
+      }
+    }
+    
+    ctx.body = {
+      ...FIND_SUCCESS,
+      data: {
+        ...data
+      }
+    }
+  }
   // 获取用户的评论与回复
   static async getUserComments(ctx) {
     const userId = ctx.params.userId
@@ -80,6 +137,14 @@ class CommentController {
 
     const r_data = await ReplyModel.findUserReplies(+userId)
 
+    // interest
+    if (c_data.rows) {
+      for (let i in c_data.rows) {
+        const interest = await InterestModel.getInterest(+c_data.rows[i].fromUid, +c_data.rows[i].bookId)
+        c_data.rows[i].setDataValue('interest', interest)
+      }
+    }
+    
     const data = {
       cData: c_data.rows,
       rData: r_data.rows
@@ -103,26 +168,46 @@ class CommentController {
       score,      
       bookId,
       fromUid,
-      publishTime
     } = {
       ...ctx.request.body  
       }
-    
-    const data = await CommentModel.createComment({
-      topicId,
-      topicType,
-      title,
-      content,
-      score,      
-      bookId,
-      fromUid,
-      publishTime
-    })
+    // 检查是否已存在
+    const isExist = await CommentModel.getCUser2Book(+fromUid, +bookId)
+    if (isExist) {
+      // 修改
+      const data = await CommentModel.modifyComment({
+        topicId,
+        topicType,
+        title,
+        content,
+        score,
+        bookId: +bookId,
+        fromUid: +fromUid,
+        publishTime: new Date()
+      })
 
-    data !== false ? ctx.body = {
-      ...ADD_SUCCESS
-    } : ctx.body = {
-      ...ADD_WRONG  
+      data !== false ? ctx.body = {
+        ...MOD_SUCCESS
+      } : ctx.body = {
+        ...MOD_WRONG
+      }
+    } else {
+      const data = await CommentModel.createComment({
+        topicId,
+        topicType,
+        title,
+        content,
+        score,
+        bookId: +bookId,
+        fromUid: +fromUid,
+        publishTime: new Date()
+      })
+
+      data !== false ? ctx.body = {
+        ...ADD_SUCCESS
+      } : ctx.body = {
+        ...ADD_WRONG  
+      }
     }
   }
 

@@ -4,6 +4,9 @@ import {
   secret
 } from '../../config/secret'
 import UserModel from '../models/user';
+import BookModel from '../models/book'
+import CommentModel from '../models/comment'
+import TagModel from '../models/tag'
 import {
   PASSWORD_WRONG,
   USER_NOT_EXIST,
@@ -15,6 +18,23 @@ import {
 } from '../../utils/constants'
 
 class UserController {
+  // 首页展示信息
+  static async getNum(ctx) {
+    const userNum = await UserModel.getNumU()
+    const coNum = await CommentModel.getNumB_c(2)
+    const bookNum = await BookModel.getNumB()
+    const tagNum = await TagModel.getNumT()
+
+    ctx.body = {
+      code: 200,
+      data: {
+        book: bookNum,
+        user: userNum,
+        comment: coNum,
+        tag: tagNum
+      }
+    }
+  }
   /**
    * 登录
    */
