@@ -112,13 +112,13 @@ class CommentController {
     if (short_c) {
       for (let i in short_c) {
         const interest = await InterestModel.getInterest(+short_c[i].fromUid, +short_c[i].bookId)
-        short_c[i].setDataValue('interest', interest)
+        short_c[i].interest = interest
       }
     }
     if (book_c) {
       for (let i in book_c) {
         const interest = await InterestModel.getInterest(+book_c[i].fromUid, +book_c[i].bookId)
-        book_c[i].setDataValue('interest', interest)
+        book_c[i].interest = interest
       }
     }
     

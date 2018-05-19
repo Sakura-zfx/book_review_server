@@ -1,6 +1,6 @@
 import BookModel from '../models/book'
 import AuthorModel from '../models/author'
-import CommentModel from '../models/comment'
+import InterestModel from '../models/interest'
 import {
   FIND_WRONG,
   FIND_SUCCESS,
@@ -27,7 +27,7 @@ class BookController {
 
     book.authorList = str
     // 增加书籍
-    const data = await BookModel.createBook(book)
+    const data = await BookModel.createBook(+book)
 
     data !== false ? ctx.body = {
       ...ADD_SUCCESS
@@ -41,7 +41,7 @@ class BookController {
   static async deleteBook(ctx) {
     const bookId = ctx.params.bookId
 
-    const data = await BookModel.deleteBook(bookId)
+    const data = await BookModel.deleteBook(+bookId)
 
     data !== false ? ctx.body = {
       ...DEL_SUCCESS
@@ -63,7 +63,7 @@ class BookController {
 
     book.authorList = str
 
-    const data = await BookModel.modifyBook(book)
+    const data = await BookModel.modifyBook(+book)
 
     data !== false ? ctx.body = {
       ...MOD_SUCCESS
@@ -78,7 +78,19 @@ class BookController {
     const bookId = ctx.params.bookId
 
     // 书籍信息
-    const book = await BookModel.findBookById(bookId)
+    const book = await BookModel.findBookById(+bookId)
+    // 获取评分信息
+    const score = await InterestModel.getScoreByBook(+bookId)
+    let total = 0, times = 0    
+    if (score) {
+      for (let i in score) {
+        total += (score[i].score * score[i].dataValues.count)
+        times += (score[i].dataValues.count)
+      }
+    }  
+    const avg = (total / times).toFixed(2)
+    book.setDataValue('score', score)
+    book.setDataValue('avg', avg)
     // 作者信息
     const list = book.authorList ? book.authorList.split('/') : []
     book.authorList = []
@@ -87,15 +99,6 @@ class BookController {
         book.authorList.push(JSON.parse(list[i]))
       }
     }
-    // 获取评分信息
-    const scoreList = await CommentModel.getScoreByBook(bookId)
-
-    book.setDataValue('scoreList', scoreList)
-    const avg = ((scoreList.score_2 * 2) +
-        (scoreList.score_4 * 4) + (scoreList.score_6 * 6) +
-        (scoreList.score_8 * 8) + (scoreList.score_10 * 10)) /
-      (scoreList.score_2 + scoreList.score_4 + scoreList.score_6 + scoreList.score_8 + scoreList.score_10)
-    book.setDataValue('avg', avg.toFixed(2))
 
     book !== false ? ctx.body = {
       ...FIND_SUCCESS,
@@ -139,17 +142,20 @@ class BookController {
           temp.push(JSON.parse(list[j]))
         }
       }
-      // 获取评分信息
-      const scoreList = await CommentModel.getScoreByBook(books.rows[i].bookId)
-
-      books.rows[i].setDataValue('scoreList', scoreList)
-      // const avg = ((scoreList.score_2 * 2) +
-      //     (scoreList.score_4 * 4) + (scoreList.score_6 * 6) +
-      //     (scoreList.score_8 * 8) + (scoreList.score_10 * 10)) /
-      //   (scoreList.score_2 + scoreList.score_4 + scoreList.score_6 + scoreList.score_8 + scoreList.score_10)
-      //   books.rows[i].setDataValue('avg', avg.toFixed(2))
-
       books.rows[i].setDataValue('authorList', temp)
+      
+      // 获取评分信息
+      const score = await InterestModel.getScoreByBook(+books.rows[i].bookId)
+      let total = 0, times = 0    
+      if (score) {
+        for (let i in score) {
+          total += (score[i].score * score[i].dataValues.count)
+          times += (score[i].dataValues.count)
+        }
+      }  
+      const avg = (total / times).toFixed(2)
+      books.rows[i].setDataValue('score', score)
+      books.rows[i].setDataValue('avg', avg)
     }
 
     books !== false ? ctx.body = {
