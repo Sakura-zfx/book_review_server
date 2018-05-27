@@ -44,7 +44,7 @@ module.exports = function(sequelize, DataTypes) {
 			defaultValue: ''
 		},
 		publishDate: {
-			type: "YEAR(4)",
+			type: DataTypes.STRING(20),
 			allowNull: true
 		},
 		pageNumber: {

@@ -38,6 +38,21 @@ class InterestModel {
 
     return interest
   }
+  // 获取limit条数据
+  static async getAllInterest(limit) {
+    const Op = sequelize.Op
+    const interestList = await Interest.findAll({
+      where: {
+        score: {
+          [Op.gte]: 3
+        }
+      },
+      limit: limit,
+      attributes: ['userId', 'bookId', 'score']
+    })
+
+    return interestList
+  }
   // 新增
   static async add(interest) {
     const res = await Interest.create({

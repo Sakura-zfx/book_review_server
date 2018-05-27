@@ -1,6 +1,8 @@
 import CommentModel from '../models/comment'
 import ReplyModel from '../models/reply'
 import InterestModel from '../models/interest'
+import BookModel from '../models/book'
+import UserModel from '../models/user'
 import { 
   DEL_SUCCESS,
   ADD_SUCCESS,
@@ -64,10 +66,18 @@ class CommentController {
         // interest
         const interest = await InterestModel.getInterest(+commentsData.rows[i].fromUid, +bookId)
       
-        const count_reply = await ReplyModel.getReplyCount_Com(+ommentId)
+        const count_reply = await ReplyModel.getReplyCount_Com(+commentId)
 
         commentsData.rows[i].setDataValue('replyCount', count_reply)
-        commentsData.rows[i].setDataValue('interest', interest)        
+        commentsData.rows[i].setDataValue('interest', interest)   
+        
+        // 获取书籍名称和用户昵称
+        const userId = commentsData.rows[i].fromUid
+        const user = await UserModel.findUserById(+userId)
+        commentsData.rows[i].setDataValue('userName', user.nickName)           
+
+        const book = await BookModel.findBookById(+bookId)
+        commentsData.rows[i].setDataValue('bookName', book.bookName)   
       }
     }  
     
@@ -142,6 +152,14 @@ class CommentController {
       for (let i in c_data.rows) {
         const interest = await InterestModel.getInterest(+c_data.rows[i].fromUid, +c_data.rows[i].bookId)
         c_data.rows[i].setDataValue('interest', interest)
+
+        // 获取书籍名称和用户昵称
+        const user = await UserModel.findUserById(+userId)
+        c_data.rows[i].setDataValue('userName', user.nickName)           
+
+        const bookId = c_data.rows[i].bookId
+        const book = await BookModel.findBookById(+bookId)
+        c_data.rows[i].setDataValue('bookName', book.bookName)
       }
     }
     

@@ -97,25 +97,27 @@ class UserModel {
         userId
       }
     })
-    const authInfo = await Auth.findAll({
-      where: {
-        userId
-      },
-      attributes: ['identityType', 'identity', 'userRole', 'status', 'loginTime']
-    })
-    userInfo.setDataValue('userRole', authInfo[0].userRole)
-    userInfo.setDataValue('status', authInfo[0].status)
-    userInfo.setDataValue('lastLoginTime', authInfo[0].loginTime)
-    userInfo.setDataValue('email', '')
-    userInfo.setDataValue('phone', '')    
+    if (userInfo) {
+      const authInfo = await Auth.findAll({
+        where: {
+          userId
+        },
+        attributes: ['identityType', 'identity', 'userRole', 'status', 'loginTime']
+      })
+      userInfo.setDataValue('userRole', authInfo[0].userRole)
+      userInfo.setDataValue('status', authInfo[0].status)
+      userInfo.setDataValue('lastLoginTime', authInfo[0].loginTime)
+      userInfo.setDataValue('email', '')
+      userInfo.setDataValue('phone', '')
 
-    authInfo.map(item => {
-      if (item.identityType === 'email') {
-        userInfo.setDataValue('email', item.identity)
-      } else if (item.identityType === 'phone') {
-        userInfo.setDataValue('phone', item.identity)
-      }
-    })
+      authInfo.map(item => {
+        if (item.identityType === 'email') {
+          userInfo.setDataValue('email', item.identity)
+        } else if (item.identityType === 'phone') {
+          userInfo.setDataValue('phone', item.identity)
+        }
+      })
+    }  
     return userInfo
   }
 

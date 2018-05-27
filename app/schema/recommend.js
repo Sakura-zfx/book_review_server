@@ -1,20 +1,12 @@
 /* jshint indent: 1 */
 
 module.exports = function(sequelize, DataTypes) {
-	return sequelize.define('book_collection', {
+	return sequelize.define('recommend', {
 		id: {
 			type: DataTypes.INTEGER(11),
 			allowNull: false,
 			primaryKey: true,
 			autoIncrement: true
-		},
-		bookId: {
-			type: DataTypes.INTEGER(11),
-			allowNull: true,
-			references: {
-				model: 'books',
-				key: 'bookId'
-			}
 		},
 		userId: {
 			type: DataTypes.INTEGER(11),
@@ -24,16 +16,15 @@ module.exports = function(sequelize, DataTypes) {
 				key: 'userId'
 			}
 		},
-		status: {
-			type: DataTypes.INTEGER(2),
-			allowNull: true,
-			defaultValue: '0'
+		bookList: {
+			type: DataTypes.STRING(1000),
+			allowNull: true
 		},
-		collectionTime: {
+		time: {
 			type: DataTypes.DATE,
 			allowNull: true
 		}
 	}, {
-		tableName: 'book_collection'
+		tableName: 'recommend'
 	});
 };

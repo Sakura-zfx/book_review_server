@@ -2,11 +2,12 @@
  * @Author: sakura.zhang
  * @Date: 2018-03-12 00:14:59
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-05-20 01:49:02
+ * @Last Modified time: 2018-05-25 13:46:23
  */
 import Router from 'koa-router'
 import AuthorController from '../controllers/author'
 import BookContorller from '../controllers/book'
+import RecommendationController from '../controllers/recommendation/recommendation'
 import CateController from '../controllers/cate'
 import CollectionController from '../controllers/collection'
 import UserController from '../controllers/user'
@@ -23,6 +24,7 @@ router
   .post('/login', UserController.postLogin)
   .get('/logout/:userId', UserController.getLogout)
   .post('/register', UserController.createUser)
+  .post('/resetPassword', UserController.resetPassword)
 
   .get('/user/list', UserController.getUserList)
   .get('/user/search', UserController.searchUser)
@@ -46,7 +48,7 @@ router
   .put('/book/collection', CollectionController.modifyStatus)
   .delete('/book/collection/:id', CollectionController.cancelCollection)
 
-  // .get('/book/user/:userId/recommendation', ) // 书籍推荐
+  .get('/book/user/:userId/recommendation', RecommendationController.getRecBookList) // 书籍推荐
 
   .get('/cate', CateController.findCates) // 分类
   .post('/cate', CateController.createCate)

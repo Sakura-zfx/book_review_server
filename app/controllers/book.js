@@ -91,16 +91,20 @@ class BookController {
     let total = 0, times = 0    
     if (score) {
       for (let i in score) {
-        total += (score[i].score * score[i].dataValues.count)
-        times += (score[i].dataValues.count)
+        if (+score[i].score !== 0) {
+          total += (score[i].score * score[i].dataValues.count)
+          times += (score[i].dataValues.count)
+        } else {
+          continue
+        }
       }
     }  
-    const avg = (total === 0 || times === 0) ? '没有评分数据' : (total / times).toFixed(2)
+    const avg = (total === 0 || times === 0) ? '没有评分数据' : (total * 2 / times).toFixed(2)
     book.setDataValue('score', score)
     book.setDataValue('avg', avg)
     // 作者信息
     const list = book.authorList ? book.authorList.split('/') : []
-    book.authorList = []
+    let temp = []
     for (let i in list) {
       if (list[i]) {
         try {
@@ -116,7 +120,7 @@ class BookController {
         }
       }
     }
-
+    book.setDataValue('authorList', temp)
     book !== false ? ctx.body = {
       ...FIND_SUCCESS,
       data: book
@@ -176,11 +180,15 @@ class BookController {
       let total = 0, times = 0    
       if (score) {
         for (let i in score) {
-          total += (score[i].score * score[i].dataValues.count)
-          times += (score[i].dataValues.count)
+          if (+score[i].score !== 0) {
+            total += (score[i].score * score[i].dataValues.count)
+            times += (score[i].dataValues.count)
+          } else {
+            continue
+          }
         }
       }  
-      const avg = (total === 0 || times === 0) ? '没有评分数据' : (total / times).toFixed(2)
+      const avg = (total === 0 || times === 0) ? '没有评分数据' : (total * 2 / times).toFixed(2)
       books.rows[i].setDataValue('score', score)
       books.rows[i].setDataValue('avg', avg)
     }

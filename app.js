@@ -2,7 +2,7 @@
  * @Author: sakura.zhang
  * @Date: 2018-03-19 19:42:12
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-05-20 02:04:32
+ * @Last Modified time: 2018-05-25 03:36:37
  */
 import Koa from 'koa'
 import session from 'koa-session'
@@ -11,7 +11,9 @@ import redis from 'redis'
 import bodyparser from 'koa-bodyparser'
 import logger from 'koa-logger'
 import jwt from 'koa-jwt'
-import {secret} from './config/secret'
+import {
+  secret
+} from './config/secret'
 import errorHandle from './app/middlewares/errorHandle'
 import router from './app/api/index'
 import multer from 'koa-multer'
@@ -20,23 +22,25 @@ import staticResource from 'koa-static'
 import historyApiFallback from 'koa-history-api-fallback'
 
 const app = new Koa();
-const storage = multer.diskStorage({  
+const storage = multer.diskStorage({
   //文件保存路径  
-  destination: function (req, file, cb) {  
-    cb(null, 'public/uploads/')  
-  },  
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads/')
+  },
   //修改文件名称  
   filename: function (req, file, cb) {
     const mark = req.url.split('?')[1].split('=')[1]
-    var fileFormat = (file.originalname).split(".");  
-    cb(null,mark + "_" + Date.now() + "." + fileFormat[fileFormat.length - 1]);  
-  }  
-})  
+    var fileFormat = (file.originalname).split(".");
+    cb(null, mark + "_" + Date.now() + "." + fileFormat[fileFormat.length - 1]);
+  }
+})
 //加载配置  
-const upload = multer({ storage: storage });
-router.post('/upload', upload.single('file'), async (ctx, next) => {  
-  ctx.body = {  
-    filename: ctx.req.file.filename//返回文件名
+const upload = multer({
+  storage: storage
+});
+router.post('/upload', upload.single('file'), async (ctx, next) => {
+  ctx.body = {
+    filename: ctx.req.file.filename //返回文件名
   }
 })
 
@@ -71,12 +75,22 @@ app.use(logger())
 // koa-jwt错误处理中间件
 app.use(errorHandle)
 
+const myFilter = (ctx) => {
+  const url = ctx.req.url
+  const method = ctx.req.method
+  if (url === '/api/login' || url === '/api/register') {
+    return true
+  }
+  if (method.toLowerCase() === 'get') {
+    if (url === 'author' || url.indexOf('book') >= 0 || url.indexOf('comment') >= 0 || url.indexOf('tag') >= 0 || url.indexOf('reply') >= 0 || /\/api\/user\/\d{1,}/.test(url)) {
+      return true
+    }
+  }
+}
 // koa-jwt中间件使用
 app.use(jwt({
   secret,
-}).unless({
-  path: [/\/api\/register/, /\/api\/login/, /\/api\/user\/create/, /\/uploads/],
-}))
+}).unless(myFilter))
 
 
 app.use(router.routes())

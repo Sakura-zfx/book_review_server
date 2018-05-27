@@ -42,7 +42,10 @@ class UserController {
     const loginMsg = ctx.request.body
     const loginAuth = await UserModel.getAuth(loginMsg)
     if (loginAuth) {
-      if (bcrypt.compareSync(loginMsg.credential, loginAuth.credential)) {
+      if (+loginAuth.status === 1) {
+        ctx.body = USER_HAS_BEEN_BANNED
+      }
+      else if (bcrypt.compareSync(loginMsg.credential, loginAuth.credential)) {
         const user = await UserModel.findUserById(loginAuth.userId)
         const userToken = {
           userId: user.userId,
@@ -92,6 +95,39 @@ class UserController {
     }
   }
 
+  // 获取验证码
+  static async getAuthCode(ctx) {
+    const identity = ctx.query.identity
+
+    // 生成验证码，通过identity限制用户的请求次数
+
+    // 保存验证码
+
+    ctx.body = {
+      code: 200,
+      authCode: '937546'
+    }
+  }
+
+  // 密码重置
+  static async resetPassword(ctx) {
+    const userId = ctx.request.body.userId
+    let credential = ctx.request.body.credential
+    const authCode = ctx.request.body.authCode
+
+    // 密码加密
+    const salt = bcrypt.genSaltSync()
+    const hash = bcrypt.hashSync(credential, salt)
+
+    credential = hash
+
+    await UserModel.modifyAuth({ credential: credential }, { userId: +userId })
+    
+    ctx.body = {
+      code: 200,
+      msg: '重置密码成功'
+    }
+  }
   /**
    * 登出
    */
@@ -199,7 +235,7 @@ class UserController {
   static async findUserById(ctx) {
     const userId = ctx.params.userId
 
-    const userInfo = await UserModel.findUserById(userId)
+    const userInfo = await UserModel.findUserById(+userId)
 
     ctx.body = {
       code: 200,
@@ -251,7 +287,8 @@ class UserController {
     const data = await UserModel.verifyUser(identity)
 
     data ? ctx.body = {
-      ...USER_HAS_EXIST
+      ...USER_HAS_EXIST,
+      userId: data.userId
     } : ctx.body = {
         code: 200,
         msg: '可以新增'  

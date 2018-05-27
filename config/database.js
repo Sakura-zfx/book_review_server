@@ -2,7 +2,7 @@
  * @Author: sakura.zhang
  * @Date: 2018-03-12 00:48:17
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-03-19 15:30:57
+ * @Last Modified time: 2018-05-27 21:14:35
  */
 const databaseConfig = {
   database: 'book_review',
