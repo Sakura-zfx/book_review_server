@@ -99,8 +99,9 @@ class BookController {
         }
       }
     }  
-    const avg = (total === 0 || times === 0) ? '没有评分数据' : (total * 2 / times).toFixed(2)
+    const avg = (total === 0 || times === 0) ? 0 : (total / times).toFixed(2)
     book.setDataValue('score', score)
+    each.setDataValue('reviewNumbers', times)    
     book.setDataValue('avg', avg)
     // 作者信息
     const list = book.authorList ? book.authorList.split('/') : []
@@ -188,8 +189,9 @@ class BookController {
           }
         }
       }  
-      const avg = (total === 0 || times === 0) ? '没有评分数据' : (total * 2 / times).toFixed(2)
+      const avg = (total === 0 || times === 0) ? 0 : (total / times).toFixed(2)
       books.rows[i].setDataValue('score', score)
+      books.rows[i].setDataValue('reviewNumbers', times)      
       books.rows[i].setDataValue('avg', avg)
     }
 

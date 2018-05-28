@@ -1,6 +1,6 @@
 import sequelize from '../../config/connect'
 
-const Collection = sequelize.import('../schema/book_collection.js')
+const Collection = sequelize.import('../schema/interest.js')
 
 class CollectionModel {
   // 获取用户收藏的书籍
