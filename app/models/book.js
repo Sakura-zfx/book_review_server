@@ -14,6 +14,16 @@ class BookModel {
     })
     return book
   }
+  // 获取最新的书籍
+  static async getNewList(pageId, limit) {
+    const list = await Book.findAll({
+      order: [['publishDate', 'DESC']],
+      limit: limit,
+      offset: (pageId - 1) * limit
+    })
+
+    return list
+  }
   // 获取全部书籍
   static async getAllBooks() {
     const all = await Book.findAll()

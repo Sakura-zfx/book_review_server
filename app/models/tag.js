@@ -53,7 +53,11 @@ class TagModel {
    * 查询所有标签
    */
   static async findTags() {
-    const tags = await Tag.findAll()
+    const sql = 'select cateId, COUNT(id) count from tags group by cateId having count order by count DESC limit 10'
+
+    const tags = await sequelize.query(sql, {
+      type: sequelize.QueryTypes.SELECT
+    })
     return tags
   }
   // 查询标签名字
@@ -78,7 +82,8 @@ class TagModel {
     const tags = await Tag.findAll({
       where: {
         cateId: cateId
-      }
+      },
+      attributes: ['id', 'tagName']
     })
     return tags
   }

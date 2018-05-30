@@ -49,6 +49,16 @@ class CateModel {
     const cates = await Cate.findAll()
     return cates
   }
+
+  // 获取id的名称
+  static async getCate(cateId) {
+    const cate = await Cate.findOne({
+      where: {
+        id: cateId
+      }
+    })
+    return cate
+  }
 }
 
 export default CateModel

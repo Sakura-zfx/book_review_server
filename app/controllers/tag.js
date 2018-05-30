@@ -1,5 +1,6 @@
 import TagModel from '../models/tag'
 import BookTagModel from '../models/book_tag'
+import CateModel from '../models/cate'
 import {
   FIND_WRONG,
   FIND_SUCCESS,
@@ -15,7 +16,15 @@ class TagController {
   // 获取所有的tags
   static async getAllTags(ctx) {
     const data = await TagModel.findTags()
+    // 获取分类名称
+    for (let i in data) {
+      const cateId = +data[i].cateId
+      const cate = await CateModel.getCate(cateId)
+      data[i].cateName = cate.cateName
 
+      const tags = await TagModel.findTagsByCate(cateId)
+      data[i].tags = tags
+    }
     data !== false ? ctx.body = {
       ...FIND_SUCCESS,
       data: data

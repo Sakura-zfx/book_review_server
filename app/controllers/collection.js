@@ -43,13 +43,10 @@ class CollectionController {
   }
 
   static async getStatus(ctx) {
-    const bookId = ctx.params.bookId
-    const userId = ctx.params.userId
+    const bookId = +ctx.params.bookId
+    const userId = +ctx.params.userId
 
-    const data = await CollectionModel.getStatus({
-      bookId,
-      userId
-    })
+    const data = await CollectionModel.getStatus(bookId, userId)
 
     data !== false ? ctx.body = {
       ...FIND_SUCCESS,

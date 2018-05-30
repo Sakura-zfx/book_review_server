@@ -88,7 +88,8 @@ class BookController {
     const book = await BookModel.findBookById(+bookId)
     // 获取评分信息
     const score = await InterestModel.getScoreByBook(+bookId)
-    let total = 0, times = 0    
+    let total = 0,
+      times = 0
     if (score) {
       for (let i in score) {
         if (+score[i].score !== 0) {
@@ -98,10 +99,10 @@ class BookController {
           continue
         }
       }
-    }  
+    }
     const avg = (total === 0 || times === 0) ? 0 : (total / times).toFixed(2)
     book.setDataValue('score', score)
-    each.setDataValue('reviewNumbers', times)    
+    book.setDataValue('reviewNumbers', times)
     book.setDataValue('avg', avg)
     // 作者信息
     const list = book.authorList ? book.authorList.split('/') : []
@@ -110,7 +111,7 @@ class BookController {
       if (list[i]) {
         try {
           const value_json = JSON.parse(list[i])
-      
+
           if (typeof value_json === 'object') {
             temp.push(value_json)
           } else if (typeof value_json === 'number') {
@@ -127,6 +128,83 @@ class BookController {
       data: book
     } : ctx.body = {
       ...FIND_WRONG
+    }
+  }
+  // 获取最新图书
+  static async getNewList(ctx) {
+    let {
+      pageId,
+      limit
+    } = { ...ctx.query
+    }
+
+    pageId = pageId ? +pageId : 1
+    limit = limit ? +limit : 10
+    const data = await BookModel.getNewList(pageId, limit)
+
+    ctx.body = {
+      ...FIND_SUCCESS,
+      data: data
+    }
+  }
+  // 获取最热图书
+  static async getHotList(ctx) {
+    let {
+      pageId,
+      limit
+    } = { ...ctx.query
+    }
+
+    pageId = pageId ? +pageId : 1
+    limit = limit ? +limit : 10
+    const data = await InterestModel.getHotList(pageId, limit)
+    const datalist = []
+    // 获取书籍信息
+    for (let i in data) {
+      const bookId = +data[i].bookId
+
+      const book = await BookModel.findBookById(+bookId)
+      // 获取评分信息
+      const score = await InterestModel.getScoreByBook(+bookId)
+      let total = 0,
+        times = 0
+      if (score) {
+        for (let i in score) {
+          if (+score[i].score !== 0) {
+            total += (score[i].score * score[i].dataValues.count)
+            times += (score[i].dataValues.count)
+          } else {
+            continue
+          }
+        }
+      }
+      const avg = (total === 0 || times === 0) ? 0 : (total / times).toFixed(2)
+      book.setDataValue('reviewNumbers', times)
+      book.setDataValue('avg', avg)
+      // 作者信息
+      const list = book.authorList ? book.authorList.split('/') : []
+      let temp = []
+      for (let j in list) {
+        if (list[j]) {
+          try {
+            const value_json = JSON.parse(list[j])
+
+            if (typeof value_json === 'object') {
+              temp.push(value_json)
+            } else if (typeof value_json === 'number') {
+              temp.push(value_json)
+            }
+          } catch (e) {
+            temp.push(list[j])
+          }
+        }
+      }
+      book.setDataValue('authorList', temp)
+      datalist.push(book)
+    }
+    ctx.body = {
+      ...FIND_SUCCESS,
+      data: datalist
     }
   }
   /**
@@ -163,7 +241,7 @@ class BookController {
         if (list[j]) {
           try {
             const value_json = JSON.parse(list[j])
-        
+
             if (typeof value_json === 'object') {
               temp.push(value_json)
             } else if (typeof value_json === 'number') {
@@ -173,12 +251,13 @@ class BookController {
             temp.push(list[j])
           }
         }
-      }  
+      }
       books.rows[i].setDataValue('authorList', temp)
-      
+
       // 获取评分信息
       const score = await InterestModel.getScoreByBook(+books.rows[i].bookId)
-      let total = 0, times = 0    
+      let total = 0,
+        times = 0
       if (score) {
         for (let i in score) {
           if (+score[i].score !== 0) {
@@ -188,10 +267,10 @@ class BookController {
             continue
           }
         }
-      }  
+      }
       const avg = (total === 0 || times === 0) ? 0 : (total / times).toFixed(2)
       books.rows[i].setDataValue('score', score)
-      books.rows[i].setDataValue('reviewNumbers', times)      
+      books.rows[i].setDataValue('reviewNumbers', times)
       books.rows[i].setDataValue('avg', avg)
     }
 

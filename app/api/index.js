@@ -2,7 +2,7 @@
  * @Author: sakura.zhang
  * @Date: 2018-03-12 00:14:59
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-05-25 13:46:23
+ * @Last Modified time: 2018-05-29 23:42:09
  */
 import Router from 'koa-router'
 import AuthorController from '../controllers/author'
@@ -36,6 +36,8 @@ router
   .delete('/user/:userId', UserController.deleteUser)
 
   .get('/book/search', BookContorller.findBooks) // 书籍
+  .get('/book/new', BookContorller.getNewList)
+  .get('/book/hot', BookContorller.getHotList)
   .get('/book/:bookId', BookContorller.findBookById)
   .post('/book', BookContorller.createBook)
   .put('/book', BookContorller.modifyBook)

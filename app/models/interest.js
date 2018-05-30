@@ -15,6 +15,19 @@ class InterestModel {
 
     return interest
   }
+  // 获取最热图书
+  static async getHotList(pageId, limit) {
+    const sql = 'select i.bookId, COUNT(i.userId) count from interest as i group by i.bookId having count order by count DESC limit :pageId, :limit'
+
+    const countList = await sequelize.query(sql, {
+      replacements: {
+        pageId: (pageId - 1),
+        limit: limit
+      },
+      type: sequelize.QueryTypes.SELECT
+    })
+    return countList
+  }
   // 获取书籍下的所有评分
   static async getScoreByBook(bookId) {
     const scoreList = await Interest.findAll({
