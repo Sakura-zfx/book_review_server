@@ -23,7 +23,16 @@ class TagController {
       data[i].cateName = cate.cateName
 
       const tags = await TagModel.findTagsByCate(cateId)
-      data[i].tags = tags
+
+      // 获取每个tag下的书籍数量
+      if (tags) {
+        for (let i in tags) {
+          const count = await BookTagModel.getBooksCount(+tags[i].id)
+
+          tags[i].setDataValue('count', count)
+        }
+      }
+      data[i].tags = tags      
     }
     data !== false ? ctx.body = {
       ...FIND_SUCCESS,
@@ -41,7 +50,7 @@ class TagController {
     if (data.rows) {
       for (let i in data.rows) {
         const name = await TagModel.getTagName(+data.rows[i].tagId)
-        data.rows[i].setDataValue('tagName', name.tagName)
+        data.rows[i].setDataValue('tagName', name.tagName)      
       }
     }
 

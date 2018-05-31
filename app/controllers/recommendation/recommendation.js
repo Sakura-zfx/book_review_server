@@ -65,7 +65,7 @@ class RecommendationController {
       attributes: ['bookList', 'time']
     })
     if (data) {
-      if (+new Date() > (+new Date(data.time) + timestamps)) {
+      if (+new Date() > (+new Date(data.time) + timestamps) || data.bookList === '[]') {
         computeRec(userId)
       }
       const temp = JSON.parse(data.bookList)

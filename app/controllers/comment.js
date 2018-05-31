@@ -24,7 +24,7 @@ class CommentController {
     let pageId = ctx.query.pageId
     let limit = ctx.query.limit
 
-    order = order ? 'ASC' : 'DESC'
+    order = order ? order : 'ASC'
     pageId = pageId ? +pageId : 1
     limit = limit ? limit > 20 ? 20 : +limit : 10
     
@@ -69,7 +69,7 @@ class CommentController {
         const count_reply = await ReplyModel.getReplyCount_Com(+commentId)
 
         commentsData.rows[i].setDataValue('replyCount', count_reply)
-        commentsData.rows[i].setDataValue('interest', interest)   
+        commentsData.rows[i].setDataValue('interest', interest ? interest : {score: 0})   
         
         // 获取书籍名称和用户昵称
         const userId = commentsData.rows[i].fromUid

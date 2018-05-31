@@ -47,10 +47,11 @@ class CollectionModel {
     return res
   }
 
-  static async modifyCollectionStatus(id, status) {
+  static async modifyCollectionStatus(id, status, score) {
     const res = Collection.update({
       status,
-      collectionTime: new Date()
+      score,
+      time: new Date()
     }, {
       where: {
         id

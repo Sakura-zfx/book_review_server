@@ -61,16 +61,18 @@ class CollectionController {
       bookId,
       userId,
       status,
-      collectionTime
+      score,
+      time
     } = {
       ...ctx.request.body
     }
 
     const data = await CollectionModel.addCollection({
-      bookId,
-      userId,
-      status,
-      collectionTime
+      bookId: +bookId,
+      userId: +userId,
+      status: status,
+      score: +score,
+      time: time ? time : +new Date()
     })
 
     data !== false ? ctx.body = {
@@ -83,12 +85,13 @@ class CollectionController {
   static async modifyStatus(ctx) {
     const {
       id,
-      status
+      status,
+      score,
     } = {
       ...ctx.request.body
     }
 
-    const data = await CollectionModel.modifyCollectionStatus(id, status)
+    const data = await CollectionModel.modifyCollectionStatus(id, status, score)
 
     data !== false ? ctx.body = {
       ...MOD_SUCCESS
