@@ -98,6 +98,15 @@ class CommentModel {
 
     return comment
   }
+  // 通过id获取
+  static async getCommentDetail(id) {
+    const list = await Comment.findOne({
+      where: {
+        id: id
+      }
+    })
+    return list
+  }
   
   /**
    * 增加评论

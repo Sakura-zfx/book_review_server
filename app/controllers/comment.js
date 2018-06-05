@@ -89,6 +89,34 @@ class CommentController {
       ...FIND_WRONG  
     }
   }
+  // 根据id获取评论内容
+  static async getCommentDetail(ctx) {
+    const id = +ctx.params.id
+    let {pageId, limit} = {...ctx.query}
+
+    pageId = pageId ? +pageId : 1
+    limit = limit ? +limit : 10
+    // 获取该条评论内容
+    const data = await CommentModel.getCommentDetail(id)
+
+    // 获取书籍名称与用户信息
+    const user = await UserModel.findUserByOther(+data.fromUid)
+    data.setDataValue('fromUser', user.nickName)           
+
+    const bookId = data.bookId
+    const book = await BookModel.findBookById(+bookId)
+    data.setDataValue('book', book)
+    
+    const interest = await InterestModel.getInterest(+data.fromUid, +bookId)
+    data.setDataValue('score', interest.score)
+
+    data !== false ? ctx.body = {
+      ...FIND_SUCCESS,
+      data: data
+    } : ctx.body = {
+        ...FIND_WRONG
+    }
+  }
   // 获取用户对某本书的评论信息
   static async getCUser2Book(ctx) {
     const fromUid = ctx.query.fromUid

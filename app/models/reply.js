@@ -6,12 +6,15 @@ class ReplyModel {
   /**
    * 获取某条评论下的所有回复,replyType为comment
    */
-  static async findRepliesByComment(commentId) {
+  static async findRepliesByComment(commentId, pageId, limit) {
     const replies = await Reply.findAll({
       where: {
         commentId: commentId,
         replyType: 'comment'
-      }
+      },
+      offset: (pageId - 1) * limit,
+      limit: limit,
+      order: [['publishTime', 'DESC']]
     })
 
     return replies
@@ -43,13 +46,15 @@ class ReplyModel {
   /**
    * 获取某条评论下回复的回复
    */
-  static async findRepliesByReply(commentId, replyId) {
+  static async findRepliesByReply(commentId, replyId, pageId, limit) {
     const replies = await Reply.findAll({
       where: {
         commentId: commentId,
         replyId: replyId,
         replyType: 'reply'
-      }
+      },
+      offset: (pageId - 1) * limit,
+      limit: limit
     })
     return replies
   }
