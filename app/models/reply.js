@@ -59,7 +59,8 @@ class ReplyModel {
     const replies = await Reply.findAndCountAll({
       where: {
         fromUid: userId
-      }
+      },
+      order: [['publishTime', 'DESC']]      
     })
 
     return replies

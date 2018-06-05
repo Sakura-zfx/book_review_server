@@ -121,9 +121,18 @@ class UserModel {
     return userInfo
   }
 
+  // 查找用户信息（非本人以及管理员）
+  static async findUserByOther(userId) {
+    const userInfo = await User.findOne({
+      where: {
+        userId
+      }
+    })
+    return userInfo
+  }
   /**
    * 新建用户
-   * @param {Object} user{ nickName, picture, userGender, tureName, birth, address, registerDate}
+   * @param {Object} user{ nickName, picture, userGender, trueName, birth, address, registerDate}
    * @returns
    */
   static async createUser(user) {

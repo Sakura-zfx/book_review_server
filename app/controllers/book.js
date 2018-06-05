@@ -207,6 +207,67 @@ class BookController {
       data: datalist
     }
   }
+
+  // 获取评分图书
+  static async getHighScoreList(ctx) {
+    let {
+      pageId,
+      limit
+    } = { ...ctx.query
+    }
+
+    pageId = pageId ? +pageId : 1
+    limit = limit ? +limit : 10
+    const data = await InterestModel.getHighScoreList(pageId, limit)
+    const datalist = []
+    // 获取书籍信息
+    for (let i in data) {
+      const bookId = +data[i].bookId
+
+      const book = await BookModel.findBookById(+bookId)
+      // 获取评分信息
+      const score = await InterestModel.getScoreByBook(+bookId)
+      let total = 0,
+        times = 0
+      if (score) {
+        for (let i in score) {
+          if (+score[i].score !== 0) {
+            total += (score[i].score * score[i].dataValues.count)
+            times += (score[i].dataValues.count)
+          } else {
+            continue
+          }
+        }
+      }
+      const avg = (total === 0 || times === 0) ? 0 : (total / times).toFixed(2)
+      book.setDataValue('reviewNumbers', times)
+      book.setDataValue('avg', avg)
+      // 作者信息
+      const list = book.authorList ? book.authorList.split('/') : []
+      let temp = []
+      for (let j in list) {
+        if (list[j]) {
+          try {
+            const value_json = JSON.parse(list[j])
+
+            if (typeof value_json === 'object') {
+              temp.push(value_json)
+            } else if (typeof value_json === 'number') {
+              temp.push(value_json)
+            }
+          } catch (e) {
+            temp.push(list[j])
+          }
+        }
+      }
+      book.setDataValue('authorList', temp)
+      datalist.push(book)
+    }
+    ctx.body = {
+      ...FIND_SUCCESS,
+      data: datalist
+    }
+  }
   /**
    * 查询书籍数组
    */

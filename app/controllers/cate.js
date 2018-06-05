@@ -1,4 +1,5 @@
 import CateModel from '../models/cate'
+import TagModel from '../models/tag'
 import {
   ADD_SUCCESS,
   ADD_WRONG,
@@ -15,14 +16,16 @@ class CateController {
     const {
       cateName
     } = {
-      ...ctx.request.body
-    }
-    console.log(ctx.request.body)
+        ...ctx.request.body
+      }
     const data = await CateModel.createCate({
       cateName
     })
 
-    data !== false ? ctx.body = {
+    data !== false ? data === -1 ? ctx.body = {
+      code: -1,
+      msg: `${cateName} ： 该分类已存在，请重新输入分类名称。`
+    } : ctx.body = {
       ...ADD_SUCCESS
     } : ctx.body = {
       ...ADD_WRONG
@@ -63,6 +66,11 @@ class CateController {
 
   static async findCates(ctx) {
     const data = await CateModel.findCates()
+
+    for (let i in data) {
+      const tag = await TagModel.getCountByCate(+data[i].id)
+      data[i].setDataValue('count', tag ? tag.dataValues.count : 0)
+    }
 
     data !== false ? ctx.body = {
       ...FIND_SUCCESS,

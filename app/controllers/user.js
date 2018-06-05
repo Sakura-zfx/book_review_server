@@ -191,6 +191,7 @@ class UserController {
       trueName,
       birth,
       address,
+      presentation,
       userRole,
       status,
       email,
@@ -205,6 +206,7 @@ class UserController {
       trueName,
       birth: birth ? birth : null,
       address,
+      presentation,
     })
     await UserModel.modifyAuth({ 
       status: +status,
@@ -236,6 +238,19 @@ class UserController {
     const userId = ctx.params.userId
 
     const userInfo = await UserModel.findUserById(+userId)
+
+    ctx.body = {
+      code: 200,
+      msg: 'success',
+      data: userInfo
+    }
+  }
+
+  // 查询（非本人以及管理员）
+  static async findUserByOther(ctx) {
+    const userId = ctx.params.userId
+
+    const userInfo = await UserModel.findUserByOther(+userId)
 
     ctx.body = {
       code: 200,

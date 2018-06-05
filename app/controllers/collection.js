@@ -12,7 +12,7 @@ import {
 
 class CollectionController {
   static async getCollectionsByUser(ctx) {
-    const userId = ctx.params.userId
+    const userId = +ctx.params.userId
     let { pageId, limit } = { ...ctx.query }
     
     pageId = pageId ? +pageId : 1
@@ -22,8 +22,7 @@ class CollectionController {
 
     data !== false ? ctx.body = {
       ...FIND_SUCCESS,
-      count: data.count,
-      data: data.rows
+      ...data
     } : ctx.body = {
       ...FIND_WRONG
     }

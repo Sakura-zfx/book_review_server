@@ -23,7 +23,7 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: true,
 			defaultValue: ''
 		},
-		tureName: {
+		trueName: {
 			type: DataTypes.STRING(100),
 			allowNull: true,
 			defaultValue: ''
@@ -33,12 +33,16 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: true
 		},
 		address: {
-			type: DataTypes.STRING(200),
+			type: DataTypes.STRING(300),
 			allowNull: true,
 			defaultValue: ''
 		},
 		registerDate: {
 			type: DataTypes.DATE,
+			allowNull: true
+		},
+		presentation: {
+			type: DataTypes.STRING(2000),
 			allowNull: true
 		}
 	}, {

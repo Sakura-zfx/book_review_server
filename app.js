@@ -2,7 +2,7 @@
  * @Author: sakura.zhang
  * @Date: 2018-03-19 19:42:12
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-05-25 03:36:37
+ * @Last Modified time: 2018-06-04 00:15:02
  */
 import Koa from 'koa'
 import session from 'koa-session'
@@ -78,7 +78,7 @@ app.use(errorHandle)
 const myFilter = (ctx) => {
   const url = ctx.req.url
   const method = ctx.req.method
-  if (url === '/api/login' || url === '/api/register') {
+  if (url === '/api/login' || url === '/api/register' || url.indexOf('uploads' >= 0)) {
     return true
   }
   if (method.toLowerCase() === 'get') {

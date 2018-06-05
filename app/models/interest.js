@@ -17,8 +17,20 @@ class InterestModel {
   }
   // 获取最热图书
   static async getHotList(pageId, limit) {
-    const sql = 'select i.bookId, COUNT(i.userId) count from interest as i group by i.bookId having count order by count DESC limit :pageId, :limit'
+    const sql = 'select i.bookId, COUNT(i.userId) count from interest as i where i.score > 0 group by i.bookId having count order by count DESC limit :pageId, :limit'
 
+    const countList = await sequelize.query(sql, {
+      replacements: {
+        pageId: (pageId - 1),
+        limit: limit
+      },
+      type: sequelize.QueryTypes.SELECT
+    })
+    return countList
+  }
+  // 获取评分排行
+  static async getHighScoreList(pageId, limit) {
+    const sql = 'select i.bookId, AVG(i.score) avg from interest as i where i.score > 0 group by i.bookId having avg order by avg DESC limit :pageId, :limit'
     const countList = await sequelize.query(sql, {
       replacements: {
         pageId: (pageId - 1),

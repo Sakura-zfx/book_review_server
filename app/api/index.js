@@ -2,7 +2,7 @@
  * @Author: sakura.zhang
  * @Date: 2018-03-12 00:14:59
  * @Last Modified by: sakura.zhang
- * @Last Modified time: 2018-05-31 23:36:11
+ * @Last Modified time: 2018-06-05 01:56:23
  */
 import Router from 'koa-router'
 import AuthorController from '../controllers/author'
@@ -30,6 +30,7 @@ router
   .get('/user/search', UserController.searchUser)
   .get('/user/banlist', UserController.getBanlist)
   .get('/user/:userId', UserController.findUserById) // 用户
+  .get('/user/other/:userId', UserController.findUserByOther)
   .get('/user', UserController.verifyUser)
   .post('/user', UserController.createUser)
   .put('/user', UserController.modifyUser)
@@ -38,6 +39,7 @@ router
   .get('/book/search', BookContorller.findBooks) // 书籍
   .get('/book/new', BookContorller.getNewList)
   .get('/book/hot', BookContorller.getHotList)
+  .get('/book/score', BookContorller.getHighScoreList)
   .get('/book/:bookId', BookContorller.findBookById)
   .post('/book', BookContorller.createBook)
   .put('/book', BookContorller.modifyBook)

@@ -15,7 +15,7 @@ class CommentModel {
       type: sequelize.QueryTypes.SELECT
     })
 
-    const book_c = await await sequelize.query(sql, {
+    const book_c = await sequelize.query(sql, {
       replacements: {
         topicId: 2,
         topicType: 'book'
@@ -80,7 +80,8 @@ class CommentModel {
     const comments = await Comment.findAndCountAll({
       where: {
         fromUid: fromUid
-      }
+      },
+      order: [['publishTime', 'DESC']]      
     })
     return comments
   }
@@ -91,7 +92,8 @@ class CommentModel {
         fromUid: fromUid,
         bookId: bookId,
         topicId: topicId
-      }
+      },
+      order: [['publishTime', 'DESC']]
     })
 
     return comment

@@ -162,6 +162,16 @@ class CommentController {
         c_data.rows[i].setDataValue('bookName', book.bookName)
       }
     }
+
+    if (r_data.rows) {
+      for (let i in r_data.rows) {
+        // 用户昵称
+        const toUser = await UserModel.findUserById(+r_data.rows[i].toUid)
+        const fromUser = await UserModel.findUserById(+r_data.rows[i].fromUid)
+        r_data.rows[i].setDataValue('toUser', toUser.nickName)
+        r_data.rows[i].setDataValue('fromUser', fromUser.nickName)
+      }
+    }
     
     const data = {
       cData: c_data.rows,
@@ -170,7 +180,8 @@ class CommentController {
 
     data !== false ? ctx.body = {
       ...FIND_SUCCESS,
-      count: c_data.count + r_data.count,
+      cTotal: c_data.count,
+      rTotal: r_data.count,
       data: data
     } : ctx.body = {
       ...FIND_WRONG  

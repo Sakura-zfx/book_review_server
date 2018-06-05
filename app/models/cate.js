@@ -8,10 +8,19 @@ class CateModel {
    * @param {*} cate 
    */
   static async createCate(cate) {
-    const res = await Cate.create({
-     ...cate
+    const isExsit = await Cate.findOne({
+      where: {
+        cateName: cate.cateName
+      }
     })
-    return res
+    if (isExsit) {
+      return -1
+    } else {
+      const res = await Cate.create({
+        ...cate
+      })
+      return res
+    }
   }
 
   /**

@@ -75,6 +75,17 @@ class TagModel {
     const num = await Tag.count()
     return num
   }
+  // 获取分类下的标签数量
+  static async getCountByCate(cateId) {
+    const tag = await Tag.find({
+      where: {
+        cateId
+      },
+      attributes: ['cateId', [sequelize.fn('COUNT', sequelize.col('cateId')), 'count']],
+      group: ['cateId']
+    })
+    return tag
+  }
   /**
    * 根据类别查询标签
    */
