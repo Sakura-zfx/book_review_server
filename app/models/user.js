@@ -235,6 +235,17 @@ class UserModel {
         identity: identity
       }
     })
+    if (user) {
+      const user__item = await Auth.findOne({
+        where: {
+          userId: +user.userId,
+          identityType: 'phone',
+        }
+      })
+
+      user.setDataValue('phone', user__item ? user__item.identity : null)
+    }  
+    
     return user
   }
   // 搜索用户列表

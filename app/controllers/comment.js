@@ -108,7 +108,7 @@ class CommentController {
     data.setDataValue('book', book)
     
     const interest = await InterestModel.getInterest(+data.fromUid, +bookId)
-    data.setDataValue('score', interest.score)
+    data.setDataValue('score', interest ? interest.score : 0)
 
     data !== false ? ctx.body = {
       ...FIND_SUCCESS,

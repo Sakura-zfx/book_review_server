@@ -34,25 +34,34 @@ class BookModel {
   // 搜索书籍数组
   static async findBookBySearch(searchMsg, pageId, limit) {
     const Op = sequelize.Op
-    const books = await Book.findAndCountAll({
-      where: {
-        [Op.or]: [{
-          bookName: {
-            [Op.like]: `%${searchMsg}%`
-          }
-        }, {
-          authorList: {
-            [Op.like]: `%${searchMsg}%`
-          }
-        }, {
-          isbn10: searchMsg
-        }, {
-          isbn13: searchMsg
-        }]
-      },
-      offset: (pageId - 1) * limit,
-      limit: limit,
-    })
+    let books = []
+    if (searchMsg === '-1') {
+      books = await Book.findAndCountAll({
+        offset: (pageId - 1) * limit,
+        limit: limit,
+        order: [['publishDate', 'DESC']]
+      })
+    } else {
+      books = await Book.findAndCountAll({
+        where: {
+          [Op.or]: [{
+            bookName: {
+              [Op.like]: `%${searchMsg}%`
+            }
+          }, {
+            authorList: {
+              [Op.like]: `%${searchMsg}%`
+            }
+          }, {
+            isbn10: searchMsg
+          }, {
+            isbn13: searchMsg
+          }]
+        },
+        offset: (pageId - 1) * limit,
+        limit: limit,
+      })
+    }  
     return books
   }
   // 获取书籍总数

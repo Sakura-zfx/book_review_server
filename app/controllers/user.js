@@ -300,10 +300,10 @@ class UserController {
     const identity = ctx.query.identity
 
     const data = await UserModel.verifyUser(identity)
-
     data ? ctx.body = {
       ...USER_HAS_EXIST,
-      userId: data.userId
+      userId: data.userId,
+      phone: data.dataValues.phone
     } : ctx.body = {
         code: 200,
         msg: '可以新增'  
